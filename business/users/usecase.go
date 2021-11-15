@@ -28,12 +28,12 @@ func (uc *UserUsecase) Login(ctx context.Context, email, password string, sso bo
 	if err != nil {
 		return "", err
 	}
-	
+
 	if !encrypt.ValidateHash(password, existedUser.Password) && !sso {
 		return "", business.ErrEmailPasswordNotFound
 	}
 
-	token := uc.jwtAuth.GenerateToken(existedUser.ID)
+	token := uc.jwtAuth.GenerateToken(existedUser.ID, existedUser.Roles)
 	return token, nil
 }
 
@@ -70,9 +70,9 @@ func (uc *UserUsecase) Register(ctx context.Context, userDomain *Domain, sso boo
 	if !sso {
 		userDomain.Password, _ = encrypt.Hash(userDomain.Password)
 	}
-	
+
 	userDomain.Sso = sso
-	
+
 	err = uc.userRepository.Register(ctx, userDomain)
 	if err != nil {
 		return err
