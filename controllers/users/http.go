@@ -90,7 +90,7 @@ func (controller *UserController) Login(c echo.Context) error {
 func (controller *UserController) GetProfile(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	id := middleware.GetUserId(c)
+	id := middleware.GetUser(c).ID
 	user, err := controller.userUsecase.GetByID(ctx, id)
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
@@ -102,7 +102,7 @@ func (controller *UserController) GetProfile(c echo.Context) error {
 func (controller *UserController) UpdateProfile(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	id := middleware.GetUserId(c)
+	id := middleware.GetUser(c).ID
 	req := request.Users{}
 	if err := c.Bind(&req); err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)

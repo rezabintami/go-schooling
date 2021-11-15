@@ -26,4 +26,8 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	auth := apiV1.Group("/auth")
 	auth.POST("/register", cl.UserController.Register)
 	auth.POST("/login", cl.UserController.Login)
+
+	//! ADMIN
+	admin := apiV1.Group("/admin")
+	admin.POST("/login", cl.UserController.Login)
 }

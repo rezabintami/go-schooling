@@ -11,6 +11,7 @@ import (
 
 type JwtCustomClaims struct {
 	ID int `json:"id"`
+	Role string `json:"role"`
 	jwt.StandardClaims
 }
 
@@ -30,6 +31,7 @@ func (jwtConf *ConfigJWT) Init() middleware.JWTConfig {
 func (jwtConf *ConfigJWT) GenerateToken(userID int) string {
 	claims := JwtCustomClaims{
 		userID,
+		"user",
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(int64(jwtConf.ExpiresDuration))).Unix(),
 		},
@@ -43,10 +45,10 @@ func (jwtConf *ConfigJWT) GenerateToken(userID int) string {
 }
 
 // GetUser from jwt ...
-func GetUserId(c echo.Context) int {
+func GetUser(c echo.Context) *JwtCustomClaims {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*JwtCustomClaims)
-	return claims.ID
+	return claims
 }
 
 func MiddlewareLogging(next echo.HandlerFunc) echo.HandlerFunc {
