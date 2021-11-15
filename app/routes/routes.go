@@ -21,4 +21,9 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	//! USERS
 	apiV1.GET("/users", cl.UserController.GetProfile, middleware.JWTWithConfig(cl.JWTMiddleware))
 	apiV1.PUT("/users", cl.UserController.UpdateProfile, middleware.JWTWithConfig(cl.JWTMiddleware))
+
+	//! AUTH
+	auth := apiV1.Group("/auth")
+	auth.POST("/register", cl.UserController.Register)
+	auth.POST("/login", cl.UserController.Login)
 }
