@@ -10,7 +10,7 @@ type Users struct {
 	Name             string    `json:"name"`
 	Password         string    `json:"-"`
 	Email            string    `json:"email"`
-	UUID             int       `json:"uuid"`
+	UUID             string    `json:"uuid"`
 	BirthCertificate string    `json:"birth_certificate"`
 	FamilyCard       string    `json:"family_card"`
 	Photo            string    `json:"photo"`
