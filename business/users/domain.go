@@ -10,7 +10,7 @@ type Domain struct {
 	Name             string
 	Password         string
 	Email            string
-	UUID             int
+	UUID             string
 	BirthCertificate string
 	FamilyCard       string
 	Photo            string
