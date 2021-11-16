@@ -11,6 +11,10 @@ import (
 	_teacherController "go-schooling/controllers/teachers"
 	_teacherRepo "go-schooling/drivers/databases/teachers"
 
+	_classUsecase "go-schooling/business/classes"
+	_classController "go-schooling/controllers/classes"
+	_classRepo "go-schooling/drivers/databases/classes"
+
 	// _midtrans "ticketing/drivers/thirdparties/midtrans"
 
 	_config "go-schooling/app/config"
@@ -63,10 +67,15 @@ func main() {
 	teacherUsecase := _teacherUsecase.NewTeacherUsecase(teacherRepo, userRepo, &configJWT, timeoutContext)
 	teacherCtrl := _teacherController.NewTeacherController(teacherUsecase)
 
+	classRepo := _classRepo.NewMySQLClassesRepository(mysql_db)
+	classUsecase := _classUsecase.NewClassUsecase(classRepo, &configJWT, timeoutContext)
+	classCtrl := _classController.NewClassController(classUsecase)
+
 	routesInit := _routes.ControllerList{
 		JWTMiddleware:     configJWT.Init(),
 		UserController:    *userCtrl,
 		TeacherController: *teacherCtrl,
+		ClassController: *classCtrl,
 	}
 	routesInit.RouteRegister(e)
 

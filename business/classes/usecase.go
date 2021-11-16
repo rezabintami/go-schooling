@@ -8,11 +8,11 @@ import (
 
 type ClassUsecase struct {
 	classRepository Repository
-	contextTimeout  time.Duration
 	jwtAuth         *middleware.ConfigJWT
+	contextTimeout  time.Duration
 }
 
-func NewTeacherUsecase(cr Repository, jwtauth *middleware.ConfigJWT, timeout time.Duration) Usecase {
+func NewClassUsecase(cr Repository, jwtauth *middleware.ConfigJWT, timeout time.Duration) Usecase {
 	return &ClassUsecase{
 		classRepository: cr,
 		jwtAuth:         jwtauth,
