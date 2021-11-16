@@ -2,6 +2,7 @@ package mysql_driver
 
 import (
 	"fmt"
+	"go-schooling/drivers/databases/teachers"
 	"go-schooling/drivers/databases/users"
 	"log"
 
@@ -32,6 +33,7 @@ func (config *ConfigDB) InitialMysqlDB() *gorm.DB {
 
 	db.AutoMigrate(
 		&users.Users{},
+		&teachers.Teachers{},
 	)
 
 	return db

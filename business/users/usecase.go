@@ -45,8 +45,8 @@ func (uc *UserUsecase) GetByID(ctx context.Context, id int) (Domain, error) {
 	return result, nil
 }
 
-func (uc *UserUsecase) UpdateUser(ctx context.Context, userDomain *Domain, id int) error {
-	err := uc.userRepository.UpdateUser(ctx, userDomain, id)
+func (uc *UserUsecase) Update(ctx context.Context, userDomain *Domain, id int) error {
+	err := uc.userRepository.Update(ctx, userDomain, id)
 	if err != nil {
 		return err
 	}
