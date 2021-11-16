@@ -3,18 +3,21 @@ package teachers
 import (
 	"context"
 	"go-schooling/app/middleware"
+	"go-schooling/business/users"
 	"time"
 )
 
 type TeacherUsecase struct {
 	teacherRepository Repository
+	userRepository    users.Repository
 	contextTimeout    time.Duration
 	jwtAuth           *middleware.ConfigJWT
 }
 
-func NewTeacherUsecase(tr Repository, jwtauth *middleware.ConfigJWT, timeout time.Duration) Usecase {
+func NewTeacherUsecase(tr Repository, ur users.Repository, jwtauth *middleware.ConfigJWT, timeout time.Duration) Usecase {
 	return &TeacherUsecase{
 		teacherRepository: tr,
+		userRepository:    ur,
 		jwtAuth:           jwtauth,
 		contextTimeout:    timeout,
 	}
