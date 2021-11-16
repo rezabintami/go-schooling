@@ -2,6 +2,7 @@ package routes
 
 import (
 	_middleware "go-schooling/app/middleware"
+	"go-schooling/controllers/classes"
 	"go-schooling/controllers/teachers"
 	"go-schooling/controllers/users"
 
@@ -13,6 +14,7 @@ type ControllerList struct {
 	JWTMiddleware     middleware.JWTConfig
 	UserController    users.UserController
 	TeacherController teachers.TeacherController
+	ClassController   classes.ClassController
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
@@ -29,16 +31,21 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	auth.POST("/register", cl.UserController.Register)
 	auth.POST("/login", cl.UserController.Login)
 
+	//! TEACHERS
+	teachers := apiV1.Group("/teachers")
+	class := teachers.Group("/class")
+	class.GET("", cl.ClassController.GetAll)
+	class.POST("", cl.ClassController.Store)
+	class.DELETE("/:id", cl.ClassController.Delete)
 	
-
 	//! ADMIN
 	admin := apiV1.Group("/admin")
 	admin.POST("/login", cl.UserController.Login)
 
-	//! TEACHERS
-	teachers := admin.Group("/teachers")
-	teachers.POST("", cl.TeacherController.Store)
-	teachers.GET("", cl.TeacherController.GetAll)
-	teachers.GET("/:id", cl.TeacherController.GetByID)
-	teachers.PUT("/:id", cl.TeacherController.Update)
+	//! ADMIN TEACHERS
+	adminTeachers := admin.Group("/teachers")
+	adminTeachers.POST("", cl.TeacherController.Store)
+	adminTeachers.GET("", cl.TeacherController.GetAll)
+	adminTeachers.GET("/:id", cl.TeacherController.GetByID)
+	adminTeachers.PUT("/:id", cl.TeacherController.Update)
 }
