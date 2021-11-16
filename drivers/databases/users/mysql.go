@@ -26,7 +26,7 @@ func (repository *mysqlUsersRepository) GetByID(ctx context.Context, id int) (us
 	return usersById.toDomain(), nil
 }
 
-func (repository *mysqlUsersRepository) UpdateUser(ctx context.Context, userDomain *users.Domain, id int) error {
+func (repository *mysqlUsersRepository) Update(ctx context.Context, userDomain *users.Domain, id int) error {
 	usersUpdate := fromDomain(*userDomain)
 
 	result := repository.Conn.Where("id = ?", id).Updates(&usersUpdate)

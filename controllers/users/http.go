@@ -87,7 +87,7 @@ func (controller *UserController) Login(c echo.Context) error {
 	return base_response.NewSuccessResponse(c, result)
 }
 
-func (controller *UserController) GetProfile(c echo.Context) error {
+func (controller *UserController) GetByID(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	id := middleware.GetUser(c).ID
@@ -99,7 +99,7 @@ func (controller *UserController) GetProfile(c echo.Context) error {
 	return base_response.NewSuccessResponse(c, response.FromDomain(user))
 }
 
-func (controller *UserController) UpdateProfile(c echo.Context) error {
+func (controller *UserController) Update(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	id := middleware.GetUser(c).ID
@@ -107,7 +107,7 @@ func (controller *UserController) UpdateProfile(c echo.Context) error {
 	if err := c.Bind(&req); err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
-	err := controller.userUsecase.UpdateUser(ctx, req.ToDomain(), id)
+	err := controller.userUsecase.Update(ctx, req.ToDomain(), id)
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}

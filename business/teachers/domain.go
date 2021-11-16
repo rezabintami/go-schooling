@@ -1,6 +1,9 @@
 package teachers
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 type Domain struct {
 	ID        int
@@ -16,7 +19,15 @@ type Domain struct {
 }
 
 type Usecase interface {
+	GetAll(ctx context.Context) ([]Domain, error)
+	GetByID(ctx context.Context, id int) (Domain, error)
+	Update(ctx context.Context, data *Domain, id int) error
+	Store(ctx context.Context, data *Domain) error
 }
 
 type Repository interface {
+	GetAll(ctx context.Context) ([]Domain, error)
+	GetByID(ctx context.Context, id int) (Domain, error)
+	Update(ctx context.Context, data *Domain, id int) error
+	Store(ctx context.Context, data *Domain) error
 }
