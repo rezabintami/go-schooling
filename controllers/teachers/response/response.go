@@ -10,7 +10,6 @@ type Teachers struct {
 	NIP      string `json:"nip"`
 	Photo    string `json:"photo"`
 	Roles    string `json:"roles"`
-	Sso      bool   `json:"-"`
 }
 
 func FromDomain(teacherDomain teachers.Domain) *Teachers {
@@ -22,7 +21,6 @@ func FromDomain(teacherDomain teachers.Domain) *Teachers {
 		NIP:      teacherDomain.NIP,
 		Photo:    teacherDomain.Photo,
 		Roles:    teacherDomain.Roles,
-		Sso:      teacherDomain.Sso,
 	}
 }
 
@@ -37,7 +35,6 @@ func FromListDomain(teacherDomain []teachers.Domain) *[]Teachers {
 			NIP:      value.NIP,
 			Photo:    value.Photo,
 			Roles:    value.Roles,
-			Sso:      value.Sso,
 		}
 		teachers = append(teachers, teacher)
 	}

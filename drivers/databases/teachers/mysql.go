@@ -60,3 +60,12 @@ func (repository *mysqlTeachersRepository) Store(ctx context.Context, teacherDom
 
 	return nil
 }
+
+func (repository *mysqlTeachersRepository) GetByEmail(ctx context.Context, email string) (teachers.Domain, error) {
+	rec := Teachers{}
+	err := repository.Conn.Where("email = ?", email).First(&rec).Error
+	if err != nil {
+		return teachers.Domain{}, err
+	}
+	return rec.toDomain(), nil
+}

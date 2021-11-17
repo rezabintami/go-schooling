@@ -13,12 +13,12 @@ type Domain struct {
 	NIP       string
 	Photo     string
 	Roles     string
-	Sso       bool
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
 
 type Usecase interface {
+	Login(ctx context.Context, email, password string) (string, error)
 	GetAll(ctx context.Context) ([]Domain, error)
 	GetByID(ctx context.Context, id int) (Domain, error)
 	Update(ctx context.Context, data *Domain, id int) error
@@ -30,4 +30,5 @@ type Repository interface {
 	GetByID(ctx context.Context, id int) (Domain, error)
 	Update(ctx context.Context, data *Domain, id int) error
 	Store(ctx context.Context, data *Domain) error
+	GetByEmail(ctx context.Context, email string) (Domain, error)
 }

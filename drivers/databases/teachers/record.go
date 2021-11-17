@@ -13,7 +13,6 @@ type Teachers struct {
 	NIP       string    `json:"nip"`
 	Photo     string    `json:"photo"`
 	Roles     string    `json:"roles"`
-	Sso       bool      `json:"-"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -27,7 +26,6 @@ func (rec *Teachers) toDomain() teachers.Domain {
 		NIP:       rec.NIP,
 		Photo:     rec.Photo,
 		Roles:     rec.Roles,
-		Sso:       rec.Sso,
 		CreatedAt: rec.CreatedAt,
 		UpdatedAt: rec.UpdatedAt,
 	}
@@ -42,7 +40,6 @@ func fromDomain(userDomain teachers.Domain) *Teachers {
 		NIP:       userDomain.NIP,
 		Photo:     userDomain.Photo,
 		Roles:     userDomain.Roles,
-		Sso:       userDomain.Sso,
 		CreatedAt: userDomain.CreatedAt,
 		UpdatedAt: userDomain.UpdatedAt,
 	}
