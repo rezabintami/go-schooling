@@ -3,7 +3,9 @@ package teachers
 import (
 	"context"
 	"go-schooling/app/middleware"
+	"go-schooling/business"
 	"go-schooling/business/users"
+	"go-schooling/helper/encrypt"
 	"time"
 )
 
@@ -55,4 +57,18 @@ func (tu *TeacherUsecase) Store(ctx context.Context, teacherDomain *Domain) erro
 	}
 
 	return nil
+}
+
+func (tu *TeacherUsecase) Login(ctx context.Context, email, password string) (string, error) {
+	existedUser, err := tu.teacherRepository.GetByEmail(ctx, email)
+	if err != nil {
+		return "", err
+	}
+
+	if !encrypt.ValidateHash(password, existedUser.Password){
+		return "", business.ErrEmailPasswordNotFound
+	}
+
+	token := tu.jwtAuth.GenerateToken(existedUser.ID, existedUser.Roles)
+	return token, nil
 }
