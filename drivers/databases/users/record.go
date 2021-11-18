@@ -2,13 +2,15 @@ package users
 
 import (
 	"go-schooling/business/users"
+	"go-schooling/drivers/databases/classes"
 	"time"
 )
 
 type Users struct {
-	ID               int       `gorm:"primary_key" json:"id"`
-	Name             string    `json:"name"`
-	Password         string    `json:"-"`
+	ID               int    `gorm:"primary_key" json:"id"`
+	Name             string `json:"name"`
+	Password         string `json:"-"`
+	Class            classes.Classes
 	Email            string    `json:"email"`
 	NISN             string    `json:"nisn"`
 	BirthCertificate string    `json:"birth_certificate"`
