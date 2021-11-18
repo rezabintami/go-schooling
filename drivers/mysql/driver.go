@@ -2,6 +2,8 @@ package mysql_driver
 
 import (
 	"fmt"
+	"go-schooling/drivers/databases/articles"
+	"go-schooling/drivers/databases/category"
 	"go-schooling/drivers/databases/classes"
 	"go-schooling/drivers/databases/teachers"
 	"go-schooling/drivers/databases/users"
@@ -36,6 +38,8 @@ func (config *ConfigDB) InitialMysqlDB() *gorm.DB {
 		&users.Users{},
 		&teachers.Teachers{},
 		&classes.Classes{},
+		&articles.Articles{},
+		&category.Category{},
 	)
 
 	return db
