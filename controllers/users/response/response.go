@@ -7,7 +7,7 @@ type Users struct {
 	Name             string `json:"name"`
 	Password         string `json:"-"`
 	Email            string `json:"email"`
-	UUID             int    `json:"uuid"`
+	NISN             string `json:"nisn"`
 	BirthCertificate string `json:"birth_certificate"`
 	FamilyCard       string `json:"family_card"`
 	Photo            string `json:"photo"`
@@ -21,7 +21,7 @@ func FromDomain(userDomain users.Domain) *Users {
 		Name:             userDomain.Name,
 		Password:         userDomain.Password,
 		Email:            userDomain.Email,
-		UUID:             userDomain.UUID,
+		NISN:             userDomain.NISN,
 		BirthCertificate: userDomain.BirthCertificate,
 		FamilyCard:       userDomain.FamilyCard,
 		Photo:            userDomain.Photo,

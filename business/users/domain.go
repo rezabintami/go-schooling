@@ -10,7 +10,7 @@ type Domain struct {
 	Name             string
 	Password         string
 	Email            string
-	UUID             int
+	NISN             string
 	BirthCertificate string
 	FamilyCard       string
 	Photo            string
@@ -24,12 +24,12 @@ type Usecase interface {
 	Login(ctx context.Context, email, password string, sso bool) (string, error)
 	Register(ctx context.Context, data *Domain, sso bool) error
 	GetByID(ctx context.Context, id int) (Domain, error)
-	UpdateUser(ctx context.Context, data *Domain, id int) error
+	Update(ctx context.Context, data *Domain, id int) error
 }
 
 type Repository interface {
 	GetByID(ctx context.Context, id int) (Domain, error)
-	UpdateUser(ctx context.Context, data *Domain, id int) error
+	Update(ctx context.Context, data *Domain, id int) error
 	GetByEmail(ctx context.Context, email string) (Domain, error)
 	Register(ctx context.Context, data *Domain) error
 }
