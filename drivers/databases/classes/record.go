@@ -7,9 +7,9 @@ import (
 
 type Classes struct {
 	ID        int       `gorm:"primary_key" json:"id"`
-	Name      string    `json:"name"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	Name      string    
+	CreatedAt time.Time 
+	UpdatedAt time.Time 
 }
 
 func (rec *Classes) toDomain() classes.Domain {
