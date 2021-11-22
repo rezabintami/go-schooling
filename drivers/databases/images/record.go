@@ -1,11 +1,15 @@
 package images
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Images struct {
 	ID        int `gorm:"primary_key" json:"id"`
 	Name      string
-	Url       string
+	Path       string
 	CreatedAt time.Time
-	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt
 }

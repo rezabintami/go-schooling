@@ -3,23 +3,27 @@ package users
 import (
 	"go-schooling/business/users"
 	"go-schooling/drivers/databases/classes"
+	"go-schooling/drivers/databases/images"
 	"time"
 )
 
 type Users struct {
-	ID               int    `gorm:"primary_key" json:"id"`
-	Name             string `json:"name"`
-	Password         string `json:"-"`
+	ID               int `gorm:"primary_key" json:"id"`
+	Name             string
+	Password         string
+	ClassID          int
 	Class            classes.Classes
-	Email            string    `json:"email"`
-	NISN             string    `json:"nisn"`
-	BirthCertificate string    `json:"birth_certificate"`
-	FamilyCard       string    `json:"family_card"`
-	Photo            string    `json:"photo"`
-	Roles            string    `json:"roles"`
-	Sso              bool      `json:"-"`
-	CreatedAt        time.Time `json:"created_at"`
-	UpdatedAt        time.Time `json:"updated_at"`
+	ImageID          int
+	Images           images.Images
+	Email            string
+	NISN             string
+	BirthCertificate string
+	FamilyCard       string
+	Photo            string
+	Roles            string
+	Sso              bool
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
 }
 
 func (rec *Users) toDomain() users.Domain {
