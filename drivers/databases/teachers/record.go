@@ -7,14 +7,14 @@ import (
 
 type Teachers struct {
 	ID        int       `gorm:"primary_key" json:"id"`
-	Name      string    `json:"name"`
-	Password  string    `json:"-"`
-	Email     string    `json:"email"`
-	NIP       string    `json:"nip"`
-	Photo     string    `json:"photo"`
-	Roles     string    `json:"roles"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	Name      string   
+	Password  string   
+	Email     string   
+	NIP       string    
+	Photo     string    
+	Roles     string    
+	CreatedAt time.Time 
+	UpdatedAt time.Time 
 }
 
 func (rec *Teachers) toDomain() teachers.Domain {

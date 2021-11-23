@@ -7,7 +7,7 @@ import (
 )
 
 type Articles struct {
-	Id         int
+	Id         int `gorm:"primary_key" json:"id"`
 	Title      string
 	Content    string `gorm:"column:content_data"`
 	CategoryID int
