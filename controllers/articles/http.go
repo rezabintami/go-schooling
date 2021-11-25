@@ -38,6 +38,27 @@ func (controller *ArticleController) Store(c echo.Context) error {
 	return base_response.NewSuccessInsertResponse(c, "Successfully inserted")
 }
 
+func (controller *ArticleController) Update(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	id := c.QueryParam("id")
+	idInt, _ := strconv.Atoi(id)
+
+	req := request.Articles{}
+	if err := c.Bind(&req); err != nil {
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+	err := controller.articleUsecase.Update(ctx, req.ToDomain(), idInt)
+	if err != nil {
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+	article, err := controller.articleUsecase.GetByID(ctx, idInt)
+	if err != nil {
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+	return base_response.NewSuccessResponse(c, response.FromDomain(article))
+}
+
 func (controller *ArticleController) GetByTitle(c echo.Context) error {
 	ctx := c.Request().Context()
 
