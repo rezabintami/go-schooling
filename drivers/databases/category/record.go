@@ -1,6 +1,9 @@
 package category
 
-import "time"
+import (
+	"go-schooling/business/category"
+	"time"
+)
 
 type Category struct {
 	ID          int
@@ -10,4 +13,14 @@ type Category struct {
 	Archive     bool
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
+}
+
+func (rec *Category) ToDomain() category.Domain {
+	return category.Domain{
+		ID:        rec.ID,
+		Title:     rec.Title,
+		Active:    rec.Active,
+		CreatedAt: rec.CreatedAt,
+		UpdatedAt: rec.UpdatedAt,
+	}
 }
