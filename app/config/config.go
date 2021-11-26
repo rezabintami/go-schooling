@@ -48,6 +48,10 @@ type Config struct {
 	//! REDIS
 	REDIS_ENDPOINT string `mapstructure:"REDIS_ENDPOINT"`
 	REDIS_PASSWORD string `mapstructure:"REDIS_PASSWORD"`
+
+	//! GOOGLE STORAGE
+	GOOGLE_STORAGE_BUCKET_NAME     string `mapstructure:"GOOGLE_STORAGE_BUCKET_NAME"`
+	GOOGLE_STORAGE_PROJECT_ID string `mapstructure:"GOOGLE_STORAGE_PROJECT_ID"`
 }
 
 func GetConfig() Config {
@@ -92,6 +96,10 @@ func GetConfig() Config {
 
 		conf.REDIS_ENDPOINT = os.Getenv("REDIS_ENDPOINT")
 		conf.REDIS_PASSWORD = os.Getenv("REDIS_PASSWORD")
+
+		conf.GOOGLE_STORAGE_BUCKET_NAME = os.Getenv("GOOGLE_STORAGE_BUCKET_NAME")
+		conf.GOOGLE_STORAGE_PROJECT_ID = os.Getenv("GOOGLE_STORAGE_PROJECT_ID")
+
 	}
 
 	if err := viper.Unmarshal(&conf); err != nil {
