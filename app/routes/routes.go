@@ -2,6 +2,7 @@ package routes
 
 import (
 	_middleware "go-schooling/app/middleware"
+	"go-schooling/controllers/articles"
 	"go-schooling/controllers/classes"
 	"go-schooling/controllers/teachers"
 	"go-schooling/controllers/users"
@@ -15,6 +16,7 @@ type ControllerList struct {
 	UserController    users.UserController
 	TeacherController teachers.TeacherController
 	ClassController   classes.ClassController
+	ArticleController articles.ArticleController
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
@@ -48,4 +50,13 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	adminTeachers.GET("", cl.TeacherController.GetAll)
 	adminTeachers.GET("/:id", cl.TeacherController.GetByID)
 	adminTeachers.PUT("/:id", cl.TeacherController.Update)
+
+	//! ADMIN ARTICLES
+	adminArticles := admin.Group("/articles", middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation("SUPERUSER"))
+	adminArticles.POST("", cl.ArticleController.Store)
+	adminArticles.GET("", cl.ArticleController.Fetch)
+	adminArticles.GET("/:id", cl.ArticleController.GetByID)
+	adminArticles.GET("/:title", cl.ArticleController.GetByTitle)
+	adminArticles.PUT("/:id", cl.ArticleController.Update)
+
 }

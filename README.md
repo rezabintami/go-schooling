@@ -14,6 +14,7 @@
 - MidTrans [MidTrans](https://midtrans.com/)
 - JWT [JWT](https://github.com/dgrijalva/jwt-go)
 - Log [Logrus](https://github.com/sirupsen/logrus)
+- Google Cloud Storage [Google Cloud Storage](https://console.cloud.google.com/storage/)
 
 ## Deployed
 
@@ -22,10 +23,6 @@ This project has't deployed
 ## About
 
 This project don't have `Frontend`
-
-## API
-
-Open and run `swagger.yaml`
 
 ## Lisence
 

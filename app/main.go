@@ -6,6 +6,7 @@ import (
 	_userUsecase "go-schooling/business/users"
 	_userController "go-schooling/controllers/users"
 	_userRepo "go-schooling/drivers/databases/users"
+	"go-schooling/drivers/googlestorage"
 
 	_teacherUsecase "go-schooling/business/teachers"
 	_teacherController "go-schooling/controllers/teachers"
@@ -14,6 +15,16 @@ import (
 	_classUsecase "go-schooling/business/classes"
 	_classController "go-schooling/controllers/classes"
 	_classRepo "go-schooling/drivers/databases/classes"
+
+	_articleUsecase "go-schooling/business/articles"
+	_articleController "go-schooling/controllers/articles"
+	_articleRepo "go-schooling/drivers/databases/articles"
+
+	_categoryUsecase "go-schooling/business/category"
+	_categoryRepo "go-schooling/drivers/databases/category"
+
+	_imageUsecase "go-schooling/business/images"
+	_imageRepo "go-schooling/drivers/databases/images"
 
 	// _midtrans "ticketing/drivers/thirdparties/midtrans"
 
@@ -55,6 +66,11 @@ func main() {
 		ExpiresDuration: configApp.JWT_EXPIRED,
 	}
 
+	configGoogleStorage := googlestorage.Connection{
+		BucketName: configApp.GOOGLE_STORAGE_BUCKET_NAME,
+		ProjectID:  configApp.GOOGLE_STORAGE_PROJECT_ID,
+	}
+
 	timeoutContext := time.Duration(configApp.JWT_EXPIRED) * time.Second
 
 	e := echo.New()
@@ -71,11 +87,22 @@ func main() {
 	classUsecase := _classUsecase.NewClassUsecase(classRepo, &configJWT, timeoutContext)
 	classCtrl := _classController.NewClassController(classUsecase)
 
+	categoryRepo := _categoryRepo.NewMySQLCategoryRepository(mysql_db)
+	categoryUsecase := _categoryUsecase.NewCategoryUsecase(categoryRepo, timeoutContext)
+
+	imageRepo := _imageRepo.NewMySQLImagesRepository(mysql_db)
+	imageUsecase := _imageUsecase.NewImageUsecase(imageRepo, configGoogleStorage, timeoutContext)
+
+	articleRepo := _articleRepo.NewMySQLArticlesRepository(mysql_db)
+	articleUsecase := _articleUsecase.NewArticleUsecase(articleRepo, categoryUsecase, imageUsecase, &configJWT, timeoutContext)
+	articleCtrl := _articleController.NewArticleController(articleUsecase)
+
 	routesInit := _routes.ControllerList{
 		JWTMiddleware:     configJWT.Init(),
 		UserController:    *userCtrl,
 		TeacherController: *teacherCtrl,
-		ClassController: *classCtrl,
+		ClassController:   *classCtrl,
+		ArticleController: *articleCtrl,
 	}
 	routesInit.RouteRegister(e)
 

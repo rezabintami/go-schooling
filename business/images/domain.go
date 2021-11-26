@@ -13,11 +13,11 @@ type Domain struct {
 }
 
 type Usecase interface {
-	GetAll(ctx context.Context) ([]Domain, error)
 	GetByID(ctx context.Context, id int) (Domain, error)
+	Store(ctx context.Context, data *Domain) error
 }
 
 type Repository interface {
-	Find(ctx context.Context, active string) ([]Domain, error)
-	FindByID(id int) (Domain, error)
+	FindByID(ctx context.Context, id int) (Domain, error)
+	Store(ctx context.Context, data *Domain) error
 }
