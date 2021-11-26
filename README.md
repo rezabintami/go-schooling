@@ -23,10 +23,6 @@ This project has't deployed
 
 This project don't have `Frontend`
 
-## API
-
-Open and run `swagger.yaml`
-
 ## Lisence
 
 Open Source
