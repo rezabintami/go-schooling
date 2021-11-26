@@ -6,6 +6,7 @@ import (
 	_userUsecase "go-schooling/business/users"
 	_userController "go-schooling/controllers/users"
 	_userRepo "go-schooling/drivers/databases/users"
+	"go-schooling/drivers/googlestorage"
 
 	_teacherUsecase "go-schooling/business/teachers"
 	_teacherController "go-schooling/controllers/teachers"
@@ -65,6 +66,11 @@ func main() {
 		ExpiresDuration: configApp.JWT_EXPIRED,
 	}
 
+	configGoogleStorage := googlestorage.Connection{
+		BucketName: configApp.GOOGLE_STORAGE_BUCKET_NAME,
+		ProjectID:  configApp.GOOGLE_STORAGE_PROJECT_ID,
+	}
+
 	timeoutContext := time.Duration(configApp.JWT_EXPIRED) * time.Second
 
 	e := echo.New()
@@ -85,7 +91,7 @@ func main() {
 	categoryUsecase := _categoryUsecase.NewCategoryUsecase(categoryRepo, timeoutContext)
 
 	imageRepo := _imageRepo.NewMySQLImagesRepository(mysql_db)
-	imageUsecase := _imageUsecase.NewImageUsecase(imageRepo, timeoutContext)
+	imageUsecase := _imageUsecase.NewImageUsecase(imageRepo, configGoogleStorage, timeoutContext)
 
 	articleRepo := _articleRepo.NewMySQLArticlesRepository(mysql_db)
 	articleUsecase := _articleUsecase.NewArticleUsecase(articleRepo, categoryUsecase, imageUsecase, &configJWT, timeoutContext)
