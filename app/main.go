@@ -15,6 +15,16 @@ import (
 	_classController "go-schooling/controllers/classes"
 	_classRepo "go-schooling/drivers/databases/classes"
 
+	_articleUsecase "go-schooling/business/articles"
+	_articleController "go-schooling/controllers/articles"
+	_articleRepo "go-schooling/drivers/databases/articles"
+
+	_categoryUsecase "go-schooling/business/category"
+	_categoryRepo "go-schooling/drivers/databases/category"
+
+	_imageUsecase "go-schooling/business/images"
+	_imageRepo "go-schooling/drivers/databases/images"
+
 	// _midtrans "ticketing/drivers/thirdparties/midtrans"
 
 	_config "go-schooling/app/config"
@@ -71,11 +81,22 @@ func main() {
 	classUsecase := _classUsecase.NewClassUsecase(classRepo, &configJWT, timeoutContext)
 	classCtrl := _classController.NewClassController(classUsecase)
 
+	categoryRepo := _categoryRepo.NewMySQLCategoryRepository(mysql_db)
+	categoryUsecase := _categoryUsecase.NewCategoryUsecase(categoryRepo, timeoutContext)
+
+	imageRepo := _imageRepo.NewMySQLImagesRepository(mysql_db)
+	imageUsecase := _imageUsecase.NewImageUsecase(imageRepo, timeoutContext)
+
+	articleRepo := _articleRepo.NewMySQLArticlesRepository(mysql_db)
+	articleUsecase := _articleUsecase.NewArticleUsecase(articleRepo, categoryUsecase, imageUsecase, &configJWT, timeoutContext)
+	articleCtrl := _articleController.NewArticleController(articleUsecase)
+
 	routesInit := _routes.ControllerList{
 		JWTMiddleware:     configJWT.Init(),
 		UserController:    *userCtrl,
 		TeacherController: *teacherCtrl,
-		ClassController: *classCtrl,
+		ClassController:   *classCtrl,
+		ArticleController: *articleCtrl,
 	}
 	routesInit.RouteRegister(e)
 
