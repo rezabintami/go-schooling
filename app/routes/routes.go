@@ -4,6 +4,7 @@ import (
 	_middleware "go-schooling/app/middleware"
 	"go-schooling/controllers/articles"
 	"go-schooling/controllers/classes"
+	"go-schooling/controllers/images"
 	"go-schooling/controllers/teachers"
 	"go-schooling/controllers/users"
 
@@ -17,6 +18,7 @@ type ControllerList struct {
 	TeacherController teachers.TeacherController
 	ClassController   classes.ClassController
 	ArticleController articles.ArticleController
+	ImageController   images.ImageController
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
@@ -32,6 +34,10 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	auth := apiV1.Group("/auth")
 	auth.POST("/register", cl.UserController.Register)
 	auth.POST("/login", cl.UserController.Login)
+
+	//! IMAGES
+	upload := apiV1.Group("/upload")
+	upload.POST("/images", cl.ImageController.Store)
 
 	//! TEACHERS
 	teachers := apiV1.Group("/teachers")

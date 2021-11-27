@@ -50,8 +50,10 @@ type Config struct {
 	REDIS_PASSWORD string `mapstructure:"REDIS_PASSWORD"`
 
 	//! GOOGLE STORAGE
-	GOOGLE_STORAGE_BUCKET_NAME     string `mapstructure:"GOOGLE_STORAGE_BUCKET_NAME"`
-	GOOGLE_STORAGE_PROJECT_ID string `mapstructure:"GOOGLE_STORAGE_PROJECT_ID"`
+	GOOGLE_STORAGE_BUCKET_NAME  string `mapstructure:"GOOGLE_STORAGE_BUCKET_NAME"`
+	GOOGLE_STORAGE_PRIVATE_KEY  string `mapstructure:"GOOGLE_STORAGE_PRIVATE_KEY"`
+	GOOGLE_STORAGE_IAM_EMAIL    string `mapstructure:"GOOGLE_STORAGE_IAM_EMAIL"`
+	GOOGLE_STORAGE_EXPIRED_TIME int    `mapstructure:"GOOGLE_STORAGE_EXPIRED_TIME"`
 }
 
 func GetConfig() Config {
@@ -98,8 +100,9 @@ func GetConfig() Config {
 		conf.REDIS_PASSWORD = os.Getenv("REDIS_PASSWORD")
 
 		conf.GOOGLE_STORAGE_BUCKET_NAME = os.Getenv("GOOGLE_STORAGE_BUCKET_NAME")
-		conf.GOOGLE_STORAGE_PROJECT_ID = os.Getenv("GOOGLE_STORAGE_PROJECT_ID")
-
+		conf.GOOGLE_STORAGE_PRIVATE_KEY = os.Getenv("GOOGLE_STORAGE_PRIVATE_KEY")
+		conf.GOOGLE_STORAGE_IAM_EMAIL = os.Getenv("GOOGLE_STORAGE_IAM_EMAIL")
+		conf.GOOGLE_STORAGE_EXPIRED_TIME, _ = strconv.Atoi(os.Getenv("GOOGLE_STORAGE_EXPIRED_TIME"))
 	}
 
 	if err := viper.Unmarshal(&conf); err != nil {
