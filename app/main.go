@@ -24,6 +24,7 @@ import (
 	_categoryRepo "go-schooling/drivers/databases/category"
 
 	_imageUsecase "go-schooling/business/images"
+	_imageController "go-schooling/controllers/images"
 	_imageRepo "go-schooling/drivers/databases/images"
 
 	// _midtrans "ticketing/drivers/thirdparties/midtrans"
@@ -68,7 +69,9 @@ func main() {
 
 	configGoogleStorage := googlestorage.Connection{
 		BucketName: configApp.GOOGLE_STORAGE_BUCKET_NAME,
-		ProjectID:  configApp.GOOGLE_STORAGE_PROJECT_ID,
+		PrivateKey: configApp.GOOGLE_STORAGE_PRIVATE_KEY,
+		IAMEmail:   configApp.GOOGLE_STORAGE_IAM_EMAIL,
+		ExpTime:    configApp.GOOGLE_STORAGE_EXPIRED_TIME,
 	}
 
 	timeoutContext := time.Duration(configApp.JWT_EXPIRED) * time.Second
@@ -92,6 +95,7 @@ func main() {
 
 	imageRepo := _imageRepo.NewMySQLImagesRepository(mysql_db)
 	imageUsecase := _imageUsecase.NewImageUsecase(imageRepo, configGoogleStorage, timeoutContext)
+	imagesCtrl := _imageController.NewImageController(imageUsecase)
 
 	articleRepo := _articleRepo.NewMySQLArticlesRepository(mysql_db)
 	articleUsecase := _articleUsecase.NewArticleUsecase(articleRepo, categoryUsecase, imageUsecase, &configJWT, timeoutContext)
@@ -103,6 +107,7 @@ func main() {
 		TeacherController: *teacherCtrl,
 		ClassController:   *classCtrl,
 		ArticleController: *articleCtrl,
+		ImageController:   *imagesCtrl,
 	}
 	routesInit.RouteRegister(e)
 

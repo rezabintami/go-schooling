@@ -2,6 +2,7 @@ package images
 
 import (
 	"context"
+	"mime/multipart"
 	"time"
 )
 
@@ -14,7 +15,7 @@ type Domain struct {
 
 type Usecase interface {
 	GetByID(ctx context.Context, id int) (Domain, error)
-	Store(ctx context.Context, data *Domain) error
+	Store(ctx context.Context, data *Domain, file multipart.File) (string, error)
 }
 
 type Repository interface {

@@ -12,9 +12,9 @@ type Articles struct {
 	Title      string
 	Content    string `gorm:"column:content_data"`
 	CategoryID int
-	Category   category.Category
+	Category   category.Category `gorm:"foreignKey:CategoryID;references:ID"`
 	ImageID    int
-	Images     images.Images
+	Images     images.Images `gorm:"foreignKey:ImageID;references:ID"`
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 }

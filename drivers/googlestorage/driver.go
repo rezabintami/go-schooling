@@ -2,43 +2,44 @@ package googlestorage
 
 import (
 	"context"
+	"fmt"
 	"io"
-	"os"
+	"mime/multipart"
+	"time"
 
 	"cloud.google.com/go/storage"
 )
 
 type Connection struct {
 	BucketName string
-	ProjectID  string
+	PrivateKey string
+	IAMEmail   string
+	ExpTime    int
 }
 
 // Upload ...
-func (conn *Connection) Upload(url, name string) (res string, err error) {
+func (conn *Connection) Upload(url, name string, file multipart.File) (res string, err error) {
 	ctx := context.Background()
 	client, err := storage.NewClient(ctx)
+	fmt.Println("Bucket :", conn.BucketName)
 	if err != nil {
 		return res, err
 	}
 
-	err = write(client, conn.BucketName, name, url)
+	err = write(client, conn.BucketName, name, url, file)
 
 	return res, err
 }
 
-func write(client *storage.Client, bucket, object, url string) error {
+func write(client *storage.Client, bucket, object, url string, file multipart.File) error {
 	ctx := context.Background()
-	f, err := os.Open(url)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
 
 	wc := client.Bucket(bucket).Object(object).NewWriter(ctx)
-	_, err = io.Copy(wc, f)
+	_, err := io.Copy(wc, file)
 	if err != nil {
 		return err
 	}
+
 	if err := wc.Close(); err != nil {
 		return err
 	}
@@ -72,3 +73,22 @@ func remove(client *storage.Client, bucket, object string) error {
 	return nil
 }
 
+func (conn *Connection) GetPresignedUrl(fileUrl string) (signedUrl string, err error) {
+	defaultExpTime := time.Duration(conn.ExpTime)
+	expTime := time.Now().Add(defaultExpTime * time.Second)
+
+	opts := &storage.SignedURLOptions{
+		Method:         "GET",
+		GoogleAccessID: conn.IAMEmail,
+		PrivateKey:     []byte(conn.PrivateKey),
+		Expires:        expTime,
+	}
+
+	fmt.Println("URL : ", fileUrl)
+	signedUrl, err = storage.SignedURL(conn.BucketName, fileUrl, opts)
+	if err != nil {
+		return signedUrl, err
+	}
+
+	return signedUrl, nil
+}
