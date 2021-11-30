@@ -35,5 +35,5 @@ func NewErrorResponse(c echo.Context, status int, err error) error {
 	response.Meta.Message = "Something wrong"
 	response.Meta.Errors = []string{err.Error()}
 
-	return c.JSON(http.StatusOK, response)
+	return c.JSON(status, response)
 }

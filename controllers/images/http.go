@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"github.com/JoinVerse/xid"
 	"github.com/labstack/echo/v4"
 )
 
@@ -34,26 +35,26 @@ func (controller *ImageController) Store(c echo.Context) error {
 
 	src, err := file.Open()
 	if err != nil {
-		return base_response.NewErrorResponse(c, http.StatusBadRequest, errors.New("can't open file"))
+		return base_response.NewErrorResponse(c, http.StatusInternalServerError, errors.New("can't open file"))
 	}
 
-	defer src.Close()
+	// defer src.Close()
 
 	c.Request().Body = http.MaxBytesReader(c.Response(), c.Request().Body, int64(5000000))
 	c.Request().ParseMultipartForm(int64(5000000))
 	if err != nil {
-		return base_response.NewErrorResponse(c, http.StatusBadRequest, errors.New("file is too large"))
+		return base_response.NewErrorResponse(c, http.StatusInternalServerError, errors.New("file is too large"))
 	}
 
 	fileBytes, err := ioutil.ReadAll(src)
 	if err != nil {
-		return base_response.NewErrorResponse(c, http.StatusBadRequest, errors.New("file is too large"))
+		return base_response.NewErrorResponse(c, http.StatusInternalServerError, errors.New("file is too large"))
 	}
 
 	filetype := http.DetectContentType(fileBytes)
 	if filetype != "image/jpeg" && filetype != "image/jpg" &&
 		filetype != "image/gif" && filetype != "image/png" {
-		return base_response.NewErrorResponse(c, http.StatusBadRequest, errors.New("invalid file type"))
+		return base_response.NewErrorResponse(c, http.StatusInternalServerError, errors.New("invalid file type"))
 	}
 
 	// fileEndings, err := mime.ExtensionsByType(filetype)
@@ -61,9 +62,10 @@ func (controller *ImageController) Store(c echo.Context) error {
 	// 	return base_response.NewErrorResponse(c, http.StatusBadRequest, errors.New("can't read file type"))
 	// }
 	req.Name = file.Filename
+	filePath := "articles-" + xid.New().String()
+	req.Path = filePath
 
-	path, err := controller.imageUsecase.Store(ctx, req.ToDomain(), src)
-
+	path, err := controller.imageUsecase.Store(ctx, req.ToDomain(), file)
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
