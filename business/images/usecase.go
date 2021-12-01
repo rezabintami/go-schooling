@@ -6,8 +6,6 @@ import (
 	"go-schooling/drivers/googlestorage"
 	"mime/multipart"
 	"time"
-
-	"github.com/JoinVerse/xid"
 )
 
 type ImageUsecase struct {
@@ -32,20 +30,18 @@ func (uc *ImageUsecase) GetByID(ctx context.Context, id int) (Domain, error) {
 	return result, nil
 }
 
-func (tu *ImageUsecase) Store(ctx context.Context, imageDomain *Domain, file multipart.File) (string, error) {
-	filePath := "articles-" + xid.New().String()
-	imageDomain.Path = filePath
+func (tu *ImageUsecase) Store(ctx context.Context, imageDomain *Domain, file *multipart.FileHeader) (string, error) {
 	err := tu.imageRepository.Store(ctx, imageDomain)
 	if err != nil {
 		return "", err
 	}
 
-	_, err = tu.googlestorage.Upload(filePath, imageDomain.Name, file)
+	_, err = tu.googlestorage.Upload(imageDomain.Path, imageDomain.Name, file)
 	if err != nil {
 		return "", errors.New("Unable to upload file: " + err.Error())
 	}
 
-	filePath, err = tu.googlestorage.GetPresignedUrl(imageDomain.Path)
+	filePath, err := tu.googlestorage.GetPresignedUrl(imageDomain.Name)
 	if err != nil {
 		return "", errors.New("Unable to get url: " + err.Error())
 	}
