@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	_userUsecase "go-schooling/business/users"
@@ -46,12 +47,17 @@ import (
 func main() {
 	configApp := _config.GetConfig()
 	mysqlConfigDB := _dbMysqlDriver.ConfigDB{
-		DB_Username: configApp.MYSQL_DB_USER,
-		DB_Password: configApp.MYSQL_DB_PASS,
-		DB_Host:     configApp.MYSQL_DB_HOST,
-		DB_Port:     configApp.MYSQL_DB_PORT,
-		DB_Database: configApp.MYSQL_DB_NAME,
+		DB_Username: configApp.Mysql.User,
+		DB_Password: configApp.Mysql.Pass,
+		DB_Host:     configApp.Mysql.Host,
+		DB_Port:     configApp.Mysql.Port,
+		DB_Database: configApp.Mysql.Name,
 	}
+	fmt.Println("User :", configApp.Mysql.User)
+	fmt.Println("Pass :", configApp.Mysql.Pass)
+	fmt.Println("Host :", configApp.Mysql.Host)
+	fmt.Println("Port :", configApp.Mysql.Port)
+	fmt.Println("Name :", configApp.Mysql.Name)
 	// mongoConfigDB := _dbMongoDriver.ConfigDB{
 	// 	DB_Username: configApp.MONGO_DB_USER,
 	// 	DB_Password: configApp.MONGO_DB_PASS,
@@ -63,18 +69,18 @@ func main() {
 	mysql_db := mysqlConfigDB.InitialMysqlDB()
 
 	configJWT := _middleware.ConfigJWT{
-		SecretJWT:       configApp.JWT_SECRET,
-		ExpiresDuration: configApp.JWT_EXPIRED,
+		SecretJWT:       configApp.JWT.Secret,
+		ExpiresDuration: configApp.JWT.Expired,
 	}
 
 	configGoogleStorage := googlestorage.Connection{
-		BucketName: configApp.GOOGLE_STORAGE_BUCKET_NAME,
-		PrivateKey: configApp.GOOGLE_STORAGE_PRIVATE_KEY,
-		IAMEmail:   configApp.GOOGLE_STORAGE_IAM_EMAIL,
-		ExpTime:    configApp.GOOGLE_STORAGE_EXPIRED_TIME,
+		BucketName: configApp.GoogleStorage.BucketName,
+		PrivateKey: configApp.GoogleStorage.PrivateKey,
+		IAMEmail:   configApp.GoogleStorage.Email,
+		ExpTime:    configApp.GoogleStorage.Expired,
 	}
 
-	timeoutContext := time.Duration(configApp.JWT_EXPIRED) * time.Second
+	timeoutContext := time.Duration(configApp.JWT.Expired) * time.Second
 
 	e := echo.New()
 

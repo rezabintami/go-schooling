@@ -4,13 +4,10 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"io/ioutil"
-	"log"
 	"mime/multipart"
 	"time"
 
 	"cloud.google.com/go/storage"
-	"golang.org/x/oauth2/google"
 )
 
 type Connection struct {
@@ -23,10 +20,8 @@ type Connection struct {
 // Upload ...
 func (conn *Connection) Upload(url, name string, file *multipart.FileHeader) (res string, err error) {
 	ctx := context.Background()
+
 	client, err := storage.NewClient(ctx)
-	fmt.Println("Bucket :", conn.BucketName)
-	fmt.Println("url :", url)
-	fmt.Println("name :", name)
 	if err != nil {
 		return res, err
 	}
@@ -38,10 +33,8 @@ func (conn *Connection) Upload(url, name string, file *multipart.FileHeader) (re
 
 func write(client *storage.Client, bucket, object, url string, file *multipart.FileHeader) error {
 	ctx := context.Background()
-	fmt.Println("url :", url)
-	fmt.Println("name :", object)
-	file.Filename = url
 
+	file.Filename = url
 	src, err := file.Open()
 	if err != nil {
 		return err
@@ -76,7 +69,6 @@ func remove(client *storage.Client, bucket, object string) error {
 	ctx := context.Background()
 	object = object[1:]
 
-	// client.Bucket(bucket).Objects()
 	wc := client.Bucket(bucket).Object(object)
 	err := wc.Delete(ctx)
 	if err != nil {
@@ -99,16 +91,17 @@ func (conn *Connection) GetPresignedUrl(fileUrl string) (signedUrl string, err e
 	// creds, _ := google.FindDefaultCredentials(ctx, storage.ScopeReadWrite)
 	// cfg, _ := google.JWTConfigFromJSON(creds.JSON)
 
-	sakeyFile := "key/go-ticket-325413-020379b56a5d.json"
-	saKey, err := ioutil.ReadFile(sakeyFile)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	// sakeyFile := "key/go-ticket-325413-020379b56a5d.json"
+	// saKey, err := ioutil.ReadFile(sakeyFile)
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
 
-	cfg, err := google.JWTConfigFromJSON(saKey)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	// cfg, err := google.JWTConfigFromJSON(saKey)
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
+
 	// opts := &storage.SignedURLOptions{
 	// 	Method:         "GET",
 	// 	GoogleAccessID: cfg.Email,
@@ -150,11 +143,11 @@ func (conn *Connection) GetPresignedUrl(fileUrl string) (signedUrl string, err e
 	// key, _ := x509.ParsePKCS1PrivateKey(block.Bytes)
 	// cert, err := x509.ParseCertificates(block.Bytes)
 	// s, _ := ssh.ParsePrivateKey(block.Bytes)
-	fmt.Println("public key :", cfg.PrivateKey)
+	// fmt.Println("public key :", cfg.PrivateKey)
 	opts := &storage.SignedURLOptions{
 		Method:         "GET",
 		GoogleAccessID: conn.IAMEmail,
-		PrivateKey:     cfg.PrivateKey,
+		PrivateKey:     []byte(conn.PrivateKey),
 		Expires:        expTime,
 	}
 
