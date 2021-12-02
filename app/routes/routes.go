@@ -36,8 +36,9 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	auth.POST("/login", cl.UserController.Login)
 
 	//! IMAGES
-	upload := apiV1.Group("/upload")
-	upload.POST("/images", cl.ImageController.Store)
+	upload := apiV1.Group("/images")
+	upload.POST("/upload", cl.ImageController.Store)
+	upload.GET("/:id", cl.ImageController.GetByID)
 
 	//! TEACHERS
 	teachers := apiV1.Group("/teachers")

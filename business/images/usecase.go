@@ -47,3 +47,11 @@ func (tu *ImageUsecase) Store(ctx context.Context, imageDomain *Domain, file *mu
 	}
 	return filePath, nil
 }
+
+func (tu *ImageUsecase) GetPresignedURL(ctx context.Context, name string) (string, error) {
+	filePath, err := tu.googlestorage.GetPresignedUrl(name)
+	if err != nil {
+		return "", errors.New("Unable to get url: " + err.Error())
+	}
+	return filePath, nil
+}

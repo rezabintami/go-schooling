@@ -9,6 +9,7 @@ import (
 	base_response "go-schooling/helper/response"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 
 	"github.com/JoinVerse/xid"
 	"github.com/labstack/echo/v4"
@@ -29,7 +30,7 @@ func (controller *ImageController) Store(c echo.Context) error {
 
 	req := request.Images{}
 
-	c.Request().Body = http.MaxBytesReader(c.Response(), c.Request().Body, 5 << 20)
+	c.Request().Body = http.MaxBytesReader(c.Response(), c.Request().Body, 5<<20)
 	err := c.Request().ParseMultipartForm(5 << 20)
 	fmt.Println("err :", err)
 	if err != nil {
@@ -73,7 +74,25 @@ func (controller *ImageController) Store(c echo.Context) error {
 	}
 
 	resp := response.Images{}
-	resp.Message = "Success"
+	resp.Path = path
+	return base_response.NewSuccessResponse(c, resp)
+}
+
+func (controller *ImageController) GetByID(c echo.Context) error {
+	ctx := c.Request().Context()
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	imageDomain, err := controller.imageUsecase.GetByID(ctx, id)
+	if err != nil {
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	path, err := controller.imageUsecase.GetPresignedURL(ctx, imageDomain.Name)
+	if err != nil {
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	resp := response.Images{}
 	resp.Path = path
 	return base_response.NewSuccessResponse(c, resp)
 }
