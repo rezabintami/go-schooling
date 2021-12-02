@@ -36,12 +36,12 @@ func (tu *ImageUsecase) Store(ctx context.Context, imageDomain *Domain, file *mu
 		return "", err
 	}
 
-	_, err = tu.googlestorage.Upload(imageDomain.Path, imageDomain.Name, file)
+	_, err = tu.googlestorage.Upload(imageDomain.Path, file)
 	if err != nil {
 		return "", errors.New("Unable to upload file: " + err.Error())
 	}
 
-	filePath, err := tu.googlestorage.GetPresignedUrl(imageDomain.Name)
+	filePath, err := tu.googlestorage.GetPresignedUrl(imageDomain.Path)
 	if err != nil {
 		return "", errors.New("Unable to get url: " + err.Error())
 	}

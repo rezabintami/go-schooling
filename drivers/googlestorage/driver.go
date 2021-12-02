@@ -18,7 +18,7 @@ type Connection struct {
 }
 
 // Upload ...
-func (conn *Connection) Upload(url, name string, file *multipart.FileHeader) (res string, err error) {
+func (conn *Connection) Upload(url string, file *multipart.FileHeader) (res string, err error) {
 	ctx := context.Background()
 
 	client, err := storage.NewClient(ctx)
@@ -26,15 +26,15 @@ func (conn *Connection) Upload(url, name string, file *multipart.FileHeader) (re
 		return res, err
 	}
 
-	err = write(client, conn.BucketName, name, url, file)
+	err = write(client, conn.BucketName, url, file)
 
 	return res, err
 }
 
-func write(client *storage.Client, bucket, object, url string, file *multipart.FileHeader) error {
+func write(client *storage.Client, bucket, object string, file *multipart.FileHeader) error {
 	ctx := context.Background()
 
-	file.Filename = url
+	file.Filename = object
 	src, err := file.Open()
 	if err != nil {
 		return err
