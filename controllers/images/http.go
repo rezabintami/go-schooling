@@ -2,6 +2,7 @@ package images
 
 import (
 	"errors"
+	"fmt"
 	"go-schooling/business/images"
 	"go-schooling/controllers/images/request"
 	"go-schooling/controllers/images/response"
@@ -28,6 +29,13 @@ func (controller *ImageController) Store(c echo.Context) error {
 
 	req := request.Images{}
 
+	c.Request().Body = http.MaxBytesReader(c.Response(), c.Request().Body, 5 << 20)
+	err := c.Request().ParseMultipartForm(5 << 20)
+	fmt.Println("err :", err)
+	if err != nil {
+		return base_response.NewErrorResponse(c, http.StatusInternalServerError, errors.New("file is too large"))
+	}
+
 	file, err := c.FormFile("file")
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
@@ -38,17 +46,11 @@ func (controller *ImageController) Store(c echo.Context) error {
 		return base_response.NewErrorResponse(c, http.StatusInternalServerError, errors.New("can't open file"))
 	}
 
-	// defer src.Close()
-
-	c.Request().Body = http.MaxBytesReader(c.Response(), c.Request().Body, int64(5000000))
-	c.Request().ParseMultipartForm(int64(5000000))
-	if err != nil {
-		return base_response.NewErrorResponse(c, http.StatusInternalServerError, errors.New("file is too large"))
-	}
+	defer src.Close()
 
 	fileBytes, err := ioutil.ReadAll(src)
 	if err != nil {
-		return base_response.NewErrorResponse(c, http.StatusInternalServerError, errors.New("file is too large"))
+		return base_response.NewErrorResponse(c, http.StatusInternalServerError, errors.New("invalid file"))
 	}
 
 	filetype := http.DetectContentType(fileBytes)
