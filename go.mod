@@ -3,8 +3,8 @@ module go-schooling
 go 1.16
 
 require (
-	cloud.google.com/go/storage v1.18.2 // indirect
-	github.com/JoinVerse/xid v0.0.0-20171120095953-afa60c3e0e47 // indirect
+	cloud.google.com/go/storage v1.18.2
+	github.com/JoinVerse/xid v0.0.0-20171120095953-afa60c3e0e47
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/labstack/echo/v4 v4.6.1
 	github.com/sirupsen/logrus v1.8.1

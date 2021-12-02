@@ -12,9 +12,9 @@ type Users struct {
 	Name             string
 	Password         string
 	ClassID          int
-	Class            classes.Classes
+	Classes          classes.Classes `gorm:"foreignKey:ClassID;references:ID"`
 	ImageID          int
-	Images           images.Images
+	Images           images.Images `gorm:"foreignKey:ImageID;references:ID"`
 	Email            string
 	NISN             string
 	BirthCertificate string
