@@ -15,6 +15,7 @@ type Domain struct {
 
 type Usecase interface {
 	GetByID(ctx context.Context, id int) (Domain, error)
+	GetPresignedURL(ctx context.Context, name string) (string, error)
 	Store(ctx context.Context, data *Domain, file *multipart.FileHeader) (string, error)
 }
 

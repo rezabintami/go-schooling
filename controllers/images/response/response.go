@@ -1,6 +1,5 @@
 package response
 
 type Images struct {
-	Message string
-	Path    string
+	Path string `json:"path"`
 }
