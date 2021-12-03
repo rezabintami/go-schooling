@@ -28,7 +28,11 @@ import (
 	_imageController "go-schooling/controllers/images"
 	_imageRepo "go-schooling/drivers/databases/images"
 
-	// _midtrans "ticketing/drivers/thirdparties/midtrans"
+	_transactionUsecase "go-schooling/business/transactions"
+	_transactionController "go-schooling/controllers/transactions"
+	_transactionRepo "go-schooling/drivers/databases/transactions"
+
+	_midtrans "go-schooling/drivers/midtrans"
 
 	_config "go-schooling/app/config"
 	_dbMysqlDriver "go-schooling/drivers/mysql"
@@ -107,13 +111,19 @@ func main() {
 	articleUsecase := _articleUsecase.NewArticleUsecase(articleRepo, categoryUsecase, imageUsecase, &configJWT, timeoutContext)
 	articleCtrl := _articleController.NewArticleController(articleUsecase)
 
+	MidtransRepo := _midtrans.NewTransactionMidtrans()
+	transactionRepo := _transactionRepo.NewMySQLTransactionRepository(mysql_db)
+	transactionUsecase := _transactionUsecase.NewTransactionUsecase(transactionRepo, timeoutContext, userRepo, MidtransRepo)
+	transactionCtrl := _transactionController.NewTransactionsController(transactionUsecase)
+
 	routesInit := _routes.ControllerList{
-		JWTMiddleware:     configJWT.Init(),
-		UserController:    *userCtrl,
-		TeacherController: *teacherCtrl,
-		ClassController:   *classCtrl,
-		ArticleController: *articleCtrl,
-		ImageController:   *imagesCtrl,
+		JWTMiddleware:         configJWT.Init(),
+		UserController:        *userCtrl,
+		TeacherController:     *teacherCtrl,
+		ClassController:       *classCtrl,
+		ArticleController:     *articleCtrl,
+		ImageController:       *imagesCtrl,
+		TransactionController: *transactionCtrl,
 	}
 	routesInit.RouteRegister(e)
 
