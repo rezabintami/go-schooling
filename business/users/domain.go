@@ -15,6 +15,7 @@ type Domain struct {
 	FamilyCard       string
 	Photo            string
 	Roles            string
+	Status           string
 	Sso              bool
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
