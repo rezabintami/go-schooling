@@ -36,7 +36,7 @@ func (tm *TransactionMidtrans) Transactions(ctx context.Context, transactionDoma
 			Secure: true,
 		},
 		CustomerDetail: &midtrans.CustDetail{
-			FName: transactionDomain.Name,
+			FName: transactionDomain.FullName,
 			Email: transactionDomain.Email,
 		},
 	}

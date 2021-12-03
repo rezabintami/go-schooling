@@ -3,13 +3,12 @@ package payments
 import "context"
 
 type Domain struct {
-	ID          int
-	UserID      int
-	OrderID     string
-	PaymentName string
-	Name        string
-	Email       string
-	Amount      float64
+	ID       int
+	UserID   int
+	OrderID  string
+	FullName string
+	Email    string
+	Amount   float64
 }
 
 type DomainResponse struct {
