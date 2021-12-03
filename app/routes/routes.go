@@ -6,6 +6,7 @@ import (
 	"go-schooling/controllers/classes"
 	"go-schooling/controllers/images"
 	"go-schooling/controllers/teachers"
+	"go-schooling/controllers/transactions"
 	"go-schooling/controllers/users"
 
 	echo "github.com/labstack/echo/v4"
@@ -13,12 +14,13 @@ import (
 )
 
 type ControllerList struct {
-	JWTMiddleware     middleware.JWTConfig
-	UserController    users.UserController
-	TeacherController teachers.TeacherController
-	ClassController   classes.ClassController
-	ArticleController articles.ArticleController
-	ImageController   images.ImageController
+	JWTMiddleware         middleware.JWTConfig
+	UserController        users.UserController
+	TeacherController     teachers.TeacherController
+	ClassController       classes.ClassController
+	ArticleController     articles.ArticleController
+	ImageController       images.ImageController
+	TransactionController transactions.TransactionsController
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
@@ -27,8 +29,14 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	apiV1 := e.Group("/api/v1")
 
 	//! USERS
-	apiV1.GET("/users", cl.UserController.GetByID, middleware.JWTWithConfig(cl.JWTMiddleware))
-	apiV1.PUT("/users", cl.UserController.Update, middleware.JWTWithConfig(cl.JWTMiddleware))
+	user := apiV1.Group("/user")
+	user.GET("/", cl.UserController.GetByID, middleware.JWTWithConfig(cl.JWTMiddleware))
+	user.PUT("/", cl.UserController.Update, middleware.JWTWithConfig(cl.JWTMiddleware))
+
+	transaction := user.Group("/transactions")
+	transaction.POST("/payment", cl.TransactionController.CreateTransaction, middleware.JWTWithConfig(cl.JWTMiddleware))
+	transaction.POST("/payment/callback", cl.TransactionController.TransactionCallbackHandler)
+	transaction.GET("/", cl.TransactionController.GetByID, middleware.JWTWithConfig(cl.JWTMiddleware))
 
 	//! AUTH
 	auth := apiV1.Group("/auth")
