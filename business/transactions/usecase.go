@@ -25,11 +25,10 @@ func NewTransactionUsecase(tr Repository, timeout time.Duration, us users.Reposi
 	}
 }
 
-func (tu *TransactionUsecase) CreateTransactions(ctx context.Context, topupDomain *Domain, id int) (payments.DomainResponse, error) {
-	//!MIDTRANS
-	topupDomain.UserID = id
-
-	result, err := tu.transactionRepository.Store(ctx, topupDomain)
+func (tu *TransactionUsecase) CreateTransactions(ctx context.Context, transactionDomain *Domain, id int) (payments.DomainResponse, error) {
+	transactionDomain.UserID = id
+	transactionDomain.Status = "pending"
+	result, err := tu.transactionRepository.Store(ctx, transactionDomain)
 	if err != nil {
 		return payments.DomainResponse{}, err
 	}
@@ -39,34 +38,40 @@ func (tu *TransactionUsecase) CreateTransactions(ctx context.Context, topupDomai
 		return payments.DomainResponse{}, err
 	}
 
+	transactionDomain.PaymentUrl = response.RedirectURL
+	err = tu.transactionRepository.Update(ctx, transactionDomain)
+	if err != nil {
+		return  payments.DomainResponse{}, err
+	}
+
 	return response, nil
 }
 
-func (tu *TransactionUsecase) Update(ctx context.Context, topupDomain *Domain) error {
-	if topupDomain.Status == "settlement" {
-		topupDomain.Status = "paid"
-	} else if topupDomain.Status == "deny" || topupDomain.Status == "expire" || topupDomain.Status == "cancel" {
-		topupDomain.Status = "canceled"
+func (tu *TransactionUsecase) Update(ctx context.Context, transactionDomain *Domain) error {
+	if transactionDomain.Status == "settlement" {
+		transactionDomain.Status = "paid"
+	} else if transactionDomain.Status == "deny" || transactionDomain.Status == "expire" || transactionDomain.Status == "cancel" {
+		transactionDomain.Status = "canceled"
 	}
-	if err := statuskey.IsValid(topupDomain.OrderID, topupDomain.StatusCode, fmt.Sprintf("%.2f", topupDomain.Amount), topupDomain.SignKey, tu.paymentsRepository.NotificationValidationKey()); err != nil {
+	if err := statuskey.IsValid(transactionDomain.OrderID, transactionDomain.StatusCode, fmt.Sprintf("%.2f", transactionDomain.Amount), transactionDomain.SignKey, tu.paymentsRepository.NotificationValidationKey()); err != nil {
 		return err
 	}
 
-	err := tu.transactionRepository.Update(ctx, topupDomain)
+	err := tu.transactionRepository.Update(ctx, transactionDomain)
 	if err != nil {
 		return err
 	}
 
-	if topupDomain.Status == "paid" {
-		result, err := tu.transactionRepository.GetByOrder(ctx, topupDomain.OrderID)
+	if transactionDomain.Status == "paid" {
+		result, err := tu.transactionRepository.GetByOrder(ctx, transactionDomain.OrderID)
 		if err != nil {
 			return err
 		}
-		_, err = tu.userRepository.GetByID(ctx, result.UserID)
+
+		err = tu.userRepository.Update(ctx, &users.Domain{Status: "Active"}, result.UserID)
 		if err != nil {
 			return err
 		}
-		//////////////////////! UPDATE USER
 	}
 
 	return nil

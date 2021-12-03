@@ -7,6 +7,7 @@ require (
 	github.com/JoinVerse/xid v0.0.0-20171120095953-afa60c3e0e47
 	github.com/cheekybits/is v0.0.0-20150225183255-68e9c0620927 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible
+	github.com/google/uuid v1.3.0
 	github.com/labstack/echo/v4 v4.6.1
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/viper v1.9.0

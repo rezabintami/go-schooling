@@ -21,6 +21,7 @@ type Users struct {
 	FamilyCard       string
 	Photo            string
 	Roles            string
+	Status           string
 	Sso              bool
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
@@ -37,6 +38,7 @@ func (rec *Users) toDomain() users.Domain {
 		FamilyCard:       rec.FamilyCard,
 		Photo:            rec.Photo,
 		Roles:            rec.Roles,
+		Status:           rec.Status,
 		Sso:              rec.Sso,
 		CreatedAt:        rec.CreatedAt,
 		UpdatedAt:        rec.UpdatedAt,
@@ -54,6 +56,7 @@ func fromDomain(userDomain users.Domain) *Users {
 		FamilyCard:       userDomain.FamilyCard,
 		Photo:            userDomain.Photo,
 		Roles:            userDomain.Roles,
+		Status:           userDomain.Status,
 		Sso:              userDomain.Sso,
 		CreatedAt:        userDomain.CreatedAt,
 		UpdatedAt:        userDomain.UpdatedAt,
