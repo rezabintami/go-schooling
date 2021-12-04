@@ -12,13 +12,16 @@ type Classes struct {
 	UpdatedAt time.Time
 }
 
-func (rec *Classes) ToDomain() *classes.Domain {
-	return &classes.Domain{
-		ID:        rec.ID,
-		Name:      rec.Name,
-		CreatedAt: rec.CreatedAt,
-		UpdatedAt: rec.UpdatedAt,
+func (rec *Classes) ToDomain() (res *classes.Domain) {
+	if rec != nil {
+		res = &classes.Domain{
+			ID:        rec.ID,
+			Name:      rec.Name,
+			CreatedAt: rec.CreatedAt,
+			UpdatedAt: rec.UpdatedAt,
+		}
 	}
+	return res
 }
 
 func fromDomain(classDomain classes.Domain) *Classes {
