@@ -1,6 +1,7 @@
 package users
 
 import (
+	"database/sql"
 	"go-schooling/business/users"
 	"go-schooling/drivers/databases/classes"
 	"go-schooling/drivers/databases/images"
@@ -8,13 +9,15 @@ import (
 )
 
 type Users struct {
-	ID               int `gorm:"primary_key" json:"id"`
-	Name             string
-	Password         string
-	ClassID          int
-	Classes          classes.Classes `gorm:"foreignKey:ClassID;references:ID"`
-	ImageID          int
-	Images           images.Images `gorm:"foreignKey:ImageID;references:ID"`
+	ID       int `gorm:"primary_key" json:"id"`
+	Name     string
+	Password string
+	ClassID  sql.NullInt64
+	Classes  *classes.Classes `gorm:"foreignKey:ClassID;references:ID"`
+	// Classes          classes.Classes
+	ImageID sql.NullInt64
+	Images  *images.Images `gorm:"foreignKey:ImageID;references:ID"`
+	// Images           images.Images
 	Email            string
 	NISN             string
 	BirthCertificate string
@@ -32,6 +35,8 @@ func (rec *Users) toDomain() users.Domain {
 		ID:               rec.ID,
 		Name:             rec.Name,
 		Password:         rec.Password,
+		Classes:          rec.Classes.ToDomain(),
+		Images:           rec.Images.ToDomain(),
 		Email:            rec.Email,
 		NISN:             rec.NISN,
 		BirthCertificate: rec.BirthCertificate,
@@ -50,6 +55,8 @@ func fromDomain(userDomain users.Domain) *Users {
 		ID:               userDomain.ID,
 		Name:             userDomain.Name,
 		Password:         userDomain.Password,
+		ClassID:          userDomain.ClassID,
+		ImageID:          userDomain.ImageID,
 		Email:            userDomain.Email,
 		NISN:             userDomain.NISN,
 		BirthCertificate: userDomain.BirthCertificate,

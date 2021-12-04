@@ -12,8 +12,8 @@ type Classes struct {
 	UpdatedAt time.Time
 }
 
-func (rec *Classes) toDomain() classes.Domain {
-	return classes.Domain{
+func (rec *Classes) ToDomain() *classes.Domain {
+	return &classes.Domain{
 		ID:        rec.ID,
 		Name:      rec.Name,
 		CreatedAt: rec.CreatedAt,

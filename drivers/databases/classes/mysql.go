@@ -25,7 +25,7 @@ func (repository *mysqlClassesRepository) GetAll(ctx context.Context) ([]classes
 	}
 	var allClasses []classes.Domain
 	for _, value := range getClasses {
-		allClasses = append(allClasses, value.toDomain())
+		allClasses = append(allClasses, *value.ToDomain())
 	}
 	return allClasses, nil
 }

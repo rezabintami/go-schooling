@@ -25,6 +25,7 @@ func NewUserUsecase(ur Repository, jwtauth *middleware.ConfigJWT, timeout time.D
 
 func (uc *UserUsecase) Login(ctx context.Context, email, password string, sso bool) (string, error) {
 	existedUser, err := uc.userRepository.GetByEmail(ctx, email)
+	
 	if err != nil {
 		return "", err
 	}
