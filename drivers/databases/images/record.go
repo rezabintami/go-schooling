@@ -23,9 +23,8 @@ func (rec *Images) ToDomain() (res *images.Domain) {
 			Path:      rec.Path,
 			CreatedAt: rec.CreatedAt,
 		}
-		return res
 	}
-	return nil
+	return res
 }
 
 func fromDomain(imageDomain images.Domain) *Images {

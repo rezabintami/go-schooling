@@ -39,7 +39,7 @@ func (repository *mysqlUsersRepository) Update(ctx context.Context, userDomain *
 
 func (nr *mysqlUsersRepository) GetByEmail(ctx context.Context, email string) (users.Domain, error) {
 	rec := Users{}
-	err := nr.Conn.Preload("Classes").Preload("Images").Where("email = ?", email).First(&rec).Error
+	err := nr.Conn.Preload("Classes").Preload("Images").Where("users.email = ?", email).First(&rec).Error
 	if err != nil {
 		return users.Domain{}, err
 	}
@@ -49,15 +49,9 @@ func (nr *mysqlUsersRepository) GetByEmail(ctx context.Context, email string) (u
 func (nr *mysqlUsersRepository) Register(ctx context.Context, userDomain *users.Domain) error {
 	rec := fromDomain(*userDomain)
 
-	result := nr.Conn.Preload("classes").Create(rec)
+	result := nr.Conn.Create(rec)
 	if result.Error != nil {
 		return result.Error
 	}
-
-	err := nr.Conn.Preload("Classes").First(&rec, rec.ID).Error
-	if err != nil {
-		return result.Error
-	}
-
 	return nil
 }
