@@ -18,3 +18,11 @@ func FromListDomain(classDomain []classes.Domain) *[]Classes {
 	}
 	return &classes
 }
+
+func FromDomain(domain *classes.Domain) (res *Classes) {
+	res = &Classes{
+		ID:   domain.ID,
+		Name: domain.Name,
+	}
+	return res
+}

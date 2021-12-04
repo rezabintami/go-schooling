@@ -23,7 +23,7 @@ func (repository *mysqlImagesRepository) FindByID(ctx context.Context, id int) (
 	if result.Error != nil {
 		return images.Domain{}, result.Error
 	}
-	return image.toDomain(), nil
+	return *image.ToDomain(), nil
 }
 
 func (repository *mysqlImagesRepository) Store(ctx context.Context, teacherDomain *images.Domain) error {
