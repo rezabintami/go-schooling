@@ -4,6 +4,7 @@ import (
 	// "encoding/json"
 	// "fmt"
 
+	"fmt"
 	"net/http"
 
 	// _config "go-schooling/app/config"
@@ -97,8 +98,8 @@ func (controller *UserController) GetByID(c echo.Context) error {
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
-
-	return base_response.NewSuccessResponse(c, response.FromDomain(&user))
+	fmt.Println("user : ",user)
+	return base_response.NewSuccessResponse(c, response.FromDomain(user))
 }
 
 func (controller *UserController) Update(c echo.Context) error {
@@ -117,7 +118,7 @@ func (controller *UserController) Update(c echo.Context) error {
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
-	return base_response.NewSuccessResponse(c, response.FromDomain(&user))
+	return base_response.NewSuccessResponse(c, response.FromDomain(user))
 }
 
 // //! OAuth2 Google

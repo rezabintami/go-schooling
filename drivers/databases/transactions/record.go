@@ -37,7 +37,7 @@ func (rec *Transactions) toDomain() transactions.Domain {
 		ID:         rec.ID,
 		UserID:     rec.UserID,
 		OrderID:    rec.OrderID,
-		Name:       rec.User.Name,
+		Name:       rec.User.Name.String,
 		Amount:     rec.Amount,
 		Status:     rec.Status,
 		PaymentUrl: rec.PaymentUrl,
@@ -51,8 +51,8 @@ func (rec *Transactions) toPaymentDomain() payments.Domain {
 		ID:       rec.ID,
 		UserID:   rec.UserID,
 		OrderID:  rec.OrderID,
-		FullName: rec.User.Name,
-		Email:    rec.User.Email,
+		FullName: rec.User.Name.String,
+		Email:    rec.User.Email.String,
 		Amount:   rec.Amount,
 	}
 }
