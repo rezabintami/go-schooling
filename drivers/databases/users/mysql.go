@@ -23,7 +23,7 @@ func (repository *mysqlUsersRepository) GetByID(ctx context.Context, id int) (us
 	if result.Error != nil {
 		return users.Domain{}, result.Error
 	}
-	return usersById.toDomain(), nil
+	return *usersById.toDomain(), nil
 }
 
 func (repository *mysqlUsersRepository) Update(ctx context.Context, userDomain *users.Domain, id int) error {
@@ -43,7 +43,7 @@ func (nr *mysqlUsersRepository) GetByEmail(ctx context.Context, email string) (u
 	if err != nil {
 		return users.Domain{}, err
 	}
-	return rec.toDomain(), nil
+	return *rec.toDomain(), nil
 }
 
 func (nr *mysqlUsersRepository) Register(ctx context.Context, userDomain *users.Domain) error {

@@ -17,7 +17,7 @@ type Domain struct {
 	ImageID          sql.NullInt64
 	Images           *images.Domain
 	Email            string
-	NISN             string
+	NISN             *string
 	BirthCertificate string
 	FamilyCard       string
 	Photo            string
