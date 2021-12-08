@@ -13,8 +13,8 @@ type Users struct {
 	Images           *imageResp.Images  `json:"images"`
 	Email            string            `json:"email"`
 	NISN             *string            `json:"nisn"`
-	BirthCertificate string            `json:"birth_certificate"`
-	FamilyCard       string            `json:"family_card"`
+	BirthCertificate *string            `json:"birth_certificate"`
+	FamilyCard       *string            `json:"family_card"`
 	Photo            string            `json:"photo"`
 	Roles            string            `json:"roles"`
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"go-schooling/app/middleware"
 	"go-schooling/business"
+	"go-schooling/helper/convertpointer"
 	"go-schooling/helper/encrypt"
 	"strings"
 	"time"
@@ -40,6 +41,11 @@ func (uc *UserUsecase) Login(ctx context.Context, email, password string, sso bo
 
 func (uc *UserUsecase) GetByID(ctx context.Context, id int) (Domain, error) {
 	result, err := uc.userRepository.GetByID(ctx, id)
+
+	result.NISN = convertpointer.ConvertPointerString(result.NISN)
+	result.BirthCertificate = convertpointer.ConvertPointerString(result.BirthCertificate)
+	result.FamilyCard = convertpointer.ConvertPointerString(result.FamilyCard)
+
 	if err != nil {
 		return Domain{}, err
 	}

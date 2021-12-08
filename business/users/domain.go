@@ -18,8 +18,8 @@ type Domain struct {
 	Images           *images.Domain
 	Email            string
 	NISN             *string
-	BirthCertificate string
-	FamilyCard       string
+	BirthCertificate *string
+	FamilyCard       *string
 	Photo            string
 	Roles            string
 	Status           string
