@@ -4,7 +4,6 @@ import (
 	// "encoding/json"
 	// "fmt"
 
-	"fmt"
 	"net/http"
 
 	// _config "go-schooling/app/config"
@@ -98,7 +97,7 @@ func (controller *UserController) GetByID(c echo.Context) error {
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
-	fmt.Println("user : ",user)
+
 	return base_response.NewSuccessResponse(c, response.FromDomain(user))
 }
 
