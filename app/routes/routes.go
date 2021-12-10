@@ -54,7 +54,7 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	class.GET("", cl.ClassController.GetAll)
 	class.POST("", cl.ClassController.Store)
 	class.DELETE("/:id", cl.ClassController.Delete)
-
+	
 	//! ADMIN
 	admin := apiV1.Group("/admin")
 	admin.POST("/login", cl.UserController.Login)

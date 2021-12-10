@@ -50,3 +50,13 @@ func (repository *mysqlClassesRepository) Delete(ctx context.Context, id int) er
 
 	return nil
 }
+
+func (repository *mysqlClassesRepository) GetByID(ctx context.Context, id int) (*classes.Domain, error) {
+	class := Classes{}
+	result := repository.Conn.Where("id = ?", id).First(&class)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return class.ToDomain(), nil
+}

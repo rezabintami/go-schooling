@@ -16,10 +16,12 @@ type Usecase interface {
 	Delete(ctx context.Context, id int) error
 	GetAll(ctx context.Context) ([]Domain, error)
 	Store(ctx context.Context, data *Domain) error
+	GetByID(ctx context.Context, id int) (*Domain, error)
 }
 
 type Repository interface {
 	Delete(ctx context.Context, id int) error
 	GetAll(ctx context.Context) ([]Domain, error)
 	Store(ctx context.Context, data *Domain) error
+	GetByID(ctx context.Context, id int) (*Domain, error)
 }
