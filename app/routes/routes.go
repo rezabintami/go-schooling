@@ -38,6 +38,16 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	transaction.POST("/payment/callback", cl.TransactionController.TransactionCallbackHandler)
 	transaction.GET("/", cl.TransactionController.GetByID, middleware.JWTWithConfig(cl.JWTMiddleware))
 
+	//! CATEGORY
+	category := apiV1.Group("/category")
+	category.GET("", cl.ClassController.GetAll, middleware.JWTWithConfig(cl.JWTMiddleware))
+	category.POST("", cl.ClassController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))
+	category.DELETE("/:id", cl.ClassController.Delete, middleware.JWTWithConfig(cl.JWTMiddleware))
+
+	//! ARTICLES USER
+	article := apiV1.Group("/article")
+	article.GET("/", cl.ArticleController.Fetch)
+
 	//! AUTH
 	auth := apiV1.Group("/auth")
 	auth.POST("/register", cl.UserController.Register)
