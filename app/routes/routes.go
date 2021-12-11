@@ -41,8 +41,6 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	//! CATEGORY
 	category := apiV1.Group("/category")
 	category.GET("", cl.ClassController.GetAll, middleware.JWTWithConfig(cl.JWTMiddleware))
-	category.POST("", cl.ClassController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))
-	category.DELETE("/:id", cl.ClassController.Delete, middleware.JWTWithConfig(cl.JWTMiddleware))
 
 	//! ARTICLES USER
 	article := apiV1.Group("/article")
@@ -83,5 +81,10 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	adminArticles.GET("/:id", cl.ArticleController.GetByID)
 	adminArticles.GET("/:title", cl.ArticleController.GetByTitle)
 	adminArticles.PUT("/:id", cl.ArticleController.Update)
+
+	//! ADMIN CATEGORY
+	adminCategory := admin.Group("/category", middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation("SUPERUSER"))
+	adminCategory.POST("", cl.ClassController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))
+	adminCategory.DELETE("/:id", cl.ClassController.Delete, middleware.JWTWithConfig(cl.JWTMiddleware))
 
 }
