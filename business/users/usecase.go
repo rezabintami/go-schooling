@@ -80,6 +80,7 @@ func (uc *UserUsecase) Register(ctx context.Context, userDomain *Domain, sso boo
 
 	userDomain.Sso = sso
 	userDomain.Roles = "USER"
+	userDomain.Graduated = false
 	err = uc.userRepository.Register(ctx, userDomain)
 	if err != nil {
 		return err
