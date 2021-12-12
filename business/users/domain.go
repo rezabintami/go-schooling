@@ -23,6 +23,7 @@ type Domain struct {
 	Photo            string
 	Roles            string
 	Status           string
+	Graduated        bool
 	Sso              bool
 	CreatedAt        time.Time
 	UpdatedAt        time.Time

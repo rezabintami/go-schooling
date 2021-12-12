@@ -23,6 +23,7 @@ type Users struct {
 	Photo            sql.NullString
 	Roles            sql.NullString
 	Status           sql.NullString
+	Graduated        sql.NullBool
 	Sso              sql.NullBool
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
@@ -42,6 +43,7 @@ func (rec *Users) toDomain() *users.Domain {
 		Photo:            rec.Photo.String,
 		Roles:            rec.Roles.String,
 		Status:           rec.Status.String,
+		Graduated:        rec.Graduated.Bool,
 		Sso:              rec.Sso.Bool,
 		CreatedAt:        rec.CreatedAt,
 		UpdatedAt:        rec.UpdatedAt,
@@ -62,6 +64,7 @@ func fromDomain(userDomain users.Domain) *Users {
 		Photo:            sql.NullString{String: userDomain.Photo, Valid: true},
 		Roles:            sql.NullString{String: userDomain.Roles, Valid: true},
 		Status:           sql.NullString{String: userDomain.Status, Valid: true},
+		Graduated:        sql.NullBool{Bool: userDomain.Graduated, Valid: true},
 		Sso:              sql.NullBool{Bool: userDomain.Sso, Valid: true},
 		CreatedAt:        userDomain.CreatedAt,
 		UpdatedAt:        userDomain.UpdatedAt,
