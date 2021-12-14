@@ -17,6 +17,19 @@ func NewMySQLUserRepository(conn *gorm.DB) users.Repository {
 	}
 }
 
+func (repository *mysqlUsersRepository) GetAll(ctx context.Context) ([]users.Domain, error) {
+	allUsers := []Users{}
+	result := repository.Conn.Preload("Classes").Preload("Images").Find(&allUsers)
+	if result.Error != nil {
+		return []users.Domain{}, result.Error
+	}
+	var usrs []users.Domain
+	for _, value := range allUsers {
+		usrs = append(usrs, *value.toDomain())
+	}
+	return usrs, nil
+}
+
 func (repository *mysqlUsersRepository) GetByID(ctx context.Context, id int) (users.Domain, error) {
 	usersById := Users{}
 	result := repository.Conn.Preload("Classes").Preload("Images").Where("users.id = ?", id).First(&usersById)

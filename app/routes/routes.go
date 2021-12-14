@@ -67,6 +67,10 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	admin := apiV1.Group("/admin")
 	admin.POST("/login", cl.UserController.Login)
 
+	//! ADMIN USERS
+	adminUser := admin.Group("/user", middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation("SUPERUSER"))
+	adminUser.GET("/:id", cl.UserController.GetByID)
+
 	//! ADMIN TEACHERS
 	adminTeachers := admin.Group("/teachers", middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation("SUPERUSER"))
 	adminTeachers.POST("", cl.TeacherController.Store)
