@@ -93,18 +93,18 @@ func (uc *UserUsecase) GetAll(ctx context.Context) ([]Domain, error) {
 	return result, nil
 }
 
-func (uc *UserUsecase) Fetch(ctx context.Context, start, last int) ([]Domain, int, error) {
-	fmt.Println("start :", start, "last :", last)
-	if start <= 0 {
-		start = 1
+func (uc *UserUsecase) Fetch(ctx context.Context, page, perpage int) ([]Domain, int, error) {
+	fmt.Println("start :", page, "last :", perpage)
+	if page <= 0 {
+		page = 1
 	}
-	if last <= 0 {
-		last = 25
+	if perpage <= 0 {
+		perpage = 25
 	}
 
-	fmt.Println("start :", start, "last :", last)
+	fmt.Println("start :", page, "last :", perpage)
 
-	res, total, err := uc.userRepository.Fetch(ctx, start, last)
+	res, total, err := uc.userRepository.Fetch(ctx, page, perpage)
 	if err != nil {
 		return []Domain{}, 0, err
 	}

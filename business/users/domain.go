@@ -20,7 +20,7 @@ type Domain struct {
 	NISN             *string
 	BirthCertificate *string
 	FamilyCard       *string
-	Photo            string
+	Photo            *string
 	Roles            string
 	Status           string
 	Graduated        bool
