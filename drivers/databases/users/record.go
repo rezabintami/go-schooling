@@ -5,6 +5,7 @@ import (
 	"go-schooling/business/users"
 	"go-schooling/drivers/databases/classes"
 	"go-schooling/drivers/databases/images"
+	"go-schooling/helper/convertpointer"
 	"time"
 )
 
@@ -37,9 +38,9 @@ func (rec *Users) toDomain() *users.Domain {
 		Classes:          rec.Classes.ToDomain(),
 		Images:           rec.Images.ToDomain(),
 		Email:            rec.Email.String,
-		NISN:             &rec.NISN.String,
-		BirthCertificate: &rec.BirthCertificate.String,
-		FamilyCard:       &rec.FamilyCard.String,
+		NISN:             convertpointer.ConvertPointerString(&rec.NISN.String),
+		BirthCertificate: convertpointer.ConvertPointerString(&rec.BirthCertificate.String),
+		FamilyCard:       convertpointer.ConvertPointerString(&rec.FamilyCard.String),
 		Photo:            rec.Photo.String,
 		Roles:            rec.Roles.String,
 		Status:           rec.Status.String,

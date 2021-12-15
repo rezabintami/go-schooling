@@ -40,7 +40,7 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 
 	//! CATEGORY
 	category := apiV1.Group("/category")
-	category.GET("", cl.ClassController.GetAll, middleware.JWTWithConfig(cl.JWTMiddleware))
+	category.GET("", cl.ClassController.GetAll, middleware.JWTWithConfig(cl.JWTMiddleware)) //! BELUM ADA FUNGSI
 
 	//! ARTICLES USER
 	article := apiV1.Group("/article")
@@ -62,14 +62,16 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	class.GET("", cl.ClassController.GetAll)
 	class.POST("", cl.ClassController.Store)
 	class.DELETE("/:id", cl.ClassController.Delete)
-	
+
 	//! ADMIN
 	admin := apiV1.Group("/admin")
 	admin.POST("/login", cl.UserController.Login)
 
 	//! ADMIN USERS
-	adminUser := admin.Group("/user", middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation("SUPERUSER"))
+	adminUser := admin.Group("/users", middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation("SUPERUSER"))
 	adminUser.GET("/:id", cl.UserController.GetByID)
+	adminUser.GET("", cl.UserController.Fetch)
+	adminUser.GET("/all", cl.UserController.GetAll)
 
 	//! ADMIN TEACHERS
 	adminTeachers := admin.Group("/teachers", middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation("SUPERUSER"))
@@ -87,8 +89,8 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	adminArticles.PUT("/:id", cl.ArticleController.Update)
 
 	//! ADMIN CATEGORY
-	adminCategory := admin.Group("/category", middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation("SUPERUSER"))
-	adminCategory.POST("", cl.ClassController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))
-	adminCategory.DELETE("/:id", cl.ClassController.Delete, middleware.JWTWithConfig(cl.JWTMiddleware))
+	adminCategory := admin.Group("/category", middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation("SUPERUSER")) //! BELUM ADA FUNGSI
+	adminCategory.POST("", cl.ClassController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))                                   //! BELUM ADA FUNGSI
+	adminCategory.DELETE("/:id", cl.ClassController.Delete, middleware.JWTWithConfig(cl.JWTMiddleware))                            //! BELUM ADA FUNGSI
 
 }

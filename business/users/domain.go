@@ -33,7 +33,9 @@ type Usecase interface {
 	Login(ctx context.Context, email, password string, sso bool) (string, error)
 	Register(ctx context.Context, data *Domain, sso bool) error
 	GetByID(ctx context.Context, id int) (Domain, error)
+	GetAll(ctx context.Context) ([]Domain, error)
 	Update(ctx context.Context, data *Domain, id int) error
+	Fetch(ctx context.Context, start, last int) ([]Domain, int, error)
 }
 
 type Repository interface {
@@ -42,4 +44,5 @@ type Repository interface {
 	Update(ctx context.Context, data *Domain, id int) error
 	GetByEmail(ctx context.Context, email string) (Domain, error)
 	Register(ctx context.Context, data *Domain) error
+	Fetch(ctx context.Context, start, last int) ([]Domain, int, error)
 }
