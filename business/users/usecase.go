@@ -2,7 +2,6 @@ package users
 
 import (
 	"context"
-	"fmt"
 	"go-schooling/app/middleware"
 	"go-schooling/business"
 	"go-schooling/helper/encrypt"
@@ -94,15 +93,12 @@ func (uc *UserUsecase) GetAll(ctx context.Context) ([]Domain, error) {
 }
 
 func (uc *UserUsecase) Fetch(ctx context.Context, page, perpage int) ([]Domain, int, error) {
-	fmt.Println("start :", page, "last :", perpage)
 	if page <= 0 {
 		page = 1
 	}
 	if perpage <= 0 {
 		perpage = 25
 	}
-
-	fmt.Println("start :", page, "last :", perpage)
 
 	res, total, err := uc.userRepository.Fetch(ctx, page, perpage)
 	if err != nil {
