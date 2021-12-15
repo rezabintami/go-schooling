@@ -2,9 +2,9 @@ package users
 
 import (
 	"context"
+	"fmt"
 	"go-schooling/app/middleware"
 	"go-schooling/business"
-	"go-schooling/helper/convertpointer"
 	"go-schooling/helper/encrypt"
 	"strings"
 	"time"
@@ -26,7 +26,7 @@ func NewUserUsecase(ur Repository, jwtauth *middleware.ConfigJWT, timeout time.D
 
 func (uc *UserUsecase) Login(ctx context.Context, email, password string, sso bool) (string, error) {
 	existedUser, err := uc.userRepository.GetByEmail(ctx, email)
-	
+
 	if err != nil {
 		return "", err
 	}
@@ -41,10 +41,6 @@ func (uc *UserUsecase) Login(ctx context.Context, email, password string, sso bo
 
 func (uc *UserUsecase) GetByID(ctx context.Context, id int) (Domain, error) {
 	result, err := uc.userRepository.GetByID(ctx, id)
-
-	result.NISN = convertpointer.ConvertPointerString(result.NISN)
-	result.BirthCertificate = convertpointer.ConvertPointerString(result.BirthCertificate)
-	result.FamilyCard = convertpointer.ConvertPointerString(result.FamilyCard)
 
 	if err != nil {
 		return Domain{}, err
@@ -87,4 +83,31 @@ func (uc *UserUsecase) Register(ctx context.Context, userDomain *Domain, sso boo
 	}
 
 	return nil
+}
+
+func (uc *UserUsecase) GetAll(ctx context.Context) ([]Domain, error) {
+	result, err := uc.userRepository.GetAll(ctx)
+	if err != nil {
+		return []Domain{}, err
+	}
+	return result, nil
+}
+
+func (uc *UserUsecase) Fetch(ctx context.Context, start, last int) ([]Domain, int, error) {
+	fmt.Println("start :", start, "last :", last)
+	if start <= 0 {
+		start = 1
+	}
+	if last <= 0 {
+		last = 25
+	}
+
+	fmt.Println("start :", start, "last :", last)
+
+	res, total, err := uc.userRepository.Fetch(ctx, start, last)
+	if err != nil {
+		return []Domain{}, 0, err
+	}
+
+	return res, total, nil
 }

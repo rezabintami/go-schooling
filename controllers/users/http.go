@@ -5,6 +5,7 @@ import (
 	// "fmt"
 
 	"net/http"
+	"strconv"
 
 	// _config "go-schooling/app/config"
 	"go-schooling/app/middleware"
@@ -119,6 +120,33 @@ func (controller *UserController) Update(c echo.Context) error {
 	}
 	return base_response.NewSuccessResponse(c, response.FromDomain(user))
 }
+
+func (controller *UserController) GetAll(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	result, err := controller.userUsecase.GetAll(ctx)
+	if err != nil {
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	return base_response.NewSuccessResponse(c, response.FromListDomain(result))
+}
+
+func (controller *UserController) Fetch(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	start := c.QueryParam("start")
+	startInt, _ := strconv.Atoi(start)
+	last := c.QueryParam("last")
+	lastInt, _ := strconv.Atoi(last)
+	articles, page, err := controller.userUsecase.Fetch(ctx, startInt, lastInt)
+	if err != nil {
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	return base_response.NewSuccessResponse(c, response.FromListPageDomain(articles, page))
+}
+
 
 // //! OAuth2 Google
 // func (controller *UserController) OauthLogin(c echo.Context) error {
