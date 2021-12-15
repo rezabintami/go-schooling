@@ -135,16 +135,16 @@ func (controller *UserController) GetAll(c echo.Context) error {
 func (controller *UserController) Fetch(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	start := c.QueryParam("start")
+	start := c.QueryParam("page")
 	startInt, _ := strconv.Atoi(start)
-	last := c.QueryParam("last")
+	last := c.QueryParam("per_page")
 	lastInt, _ := strconv.Atoi(last)
-	articles, page, err := controller.userUsecase.Fetch(ctx, startInt, lastInt)
+	articles, count, err := controller.userUsecase.Fetch(ctx, startInt, lastInt)
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	return base_response.NewSuccessResponse(c, response.FromListPageDomain(articles, page))
+	return base_response.NewSuccessResponse(c, response.FromListPageDomain(articles, count))
 }
 
 

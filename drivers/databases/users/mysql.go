@@ -2,7 +2,6 @@ package users
 
 import (
 	"context"
-	"fmt"
 	"go-schooling/business/users"
 
 	"gorm.io/gorm"
@@ -70,28 +69,25 @@ func (repository *mysqlUsersRepository) Register(ctx context.Context, userDomain
 	return nil
 }
 
-func (repository *mysqlUsersRepository) Fetch(ctx context.Context, start, last int) ([]users.Domain, int, error) {
+func (repository *mysqlUsersRepository) Fetch(ctx context.Context, page, perpage int) ([]users.Domain, int, error) {
 	rec := []Users{}
 
-	offset := (start - 1) * last
-	fmt.Println("offset :", offset)
-	err := repository.Conn.Preload("Classes").Preload("Images").Offset(offset).Limit(last).Find(&rec).Error
+	offset := (page - 1) * perpage
+	err := repository.Conn.Preload("Classes").Preload("Images").Offset(offset).Limit(perpage).Find(&rec).Error
 	if err != nil {
 		return []users.Domain{}, 0, err
 	}
-	fmt.Println("1")
 
 	var totalData int64
 	err = repository.Conn.Model(&rec).Count(&totalData).Error
 	if err != nil {
 		return []users.Domain{}, 0, err
 	}
-	fmt.Println("2")
 
 	var domainUsers []users.Domain
 	for _, value := range rec {
 		domainUsers = append(domainUsers, *value.toDomain())
 	}
-	fmt.Println("3")
+	
 	return domainUsers, int(totalData), nil
 }

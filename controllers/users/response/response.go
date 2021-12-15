@@ -15,13 +15,13 @@ type Users struct {
 	NISN             *string            `json:"nisn"`
 	BirthCertificate *string            `json:"birth_certificate"`
 	FamilyCard       *string            `json:"family_card"`
-	Photo            string             `json:"photo"`
+	Photo            *string             `json:"photo"`
 	Roles            string             `json:"roles"`
 }
 
 type UsersPageResponse struct {
 	Users *[]Users `json:"users"`
-	Page  int      `json:"page"`
+	Total  int      `json:"total"`
 }
 
 func FromDomain(userDomain users.Domain) Users {
@@ -59,7 +59,7 @@ func FromListDomain(userDomain []users.Domain) *[]Users {
 	return &allUsers
 }
 
-func FromListPageDomain(userDomain []users.Domain, Page int) *UsersPageResponse {
+func FromListPageDomain(userDomain []users.Domain, Count int) *UsersPageResponse {
 	allUsers := []Users{}
 	for _, value := range userDomain {
 		user := Users{
@@ -78,6 +78,6 @@ func FromListPageDomain(userDomain []users.Domain, Page int) *UsersPageResponse 
 	}
 	articlesResponse := UsersPageResponse{}
 	articlesResponse.Users = &allUsers
-	articlesResponse.Page = Page
+	articlesResponse.Total = Count
 	return &articlesResponse
 }
