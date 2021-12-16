@@ -3,7 +3,10 @@ package users
 import (
 	// "encoding/json"
 	// "fmt"
+
 	"net/http"
+	"strconv"
+
 	// _config "go-schooling/app/config"
 	"go-schooling/app/middleware"
 	"go-schooling/business/users"
@@ -117,6 +120,31 @@ func (controller *UserController) Update(c echo.Context) error {
 	}
 	return base_response.NewSuccessResponse(c, response.FromDomain(user))
 }
+
+func (controller *UserController) GetAll(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	result, err := controller.userUsecase.GetAll(ctx)
+	if err != nil {
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	return base_response.NewSuccessResponse(c, response.FromListDomain(result))
+}
+
+func (controller *UserController) Fetch(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	page, _ := strconv.Atoi(c.QueryParam("page"))
+	perpage, _ := strconv.Atoi(c.QueryParam("per_page"))
+	articles, count, err := controller.userUsecase.Fetch(ctx, page, perpage)
+	if err != nil {
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	return base_response.NewSuccessResponse(c, response.FromListPageDomain(articles, count))
+}
+
 
 // //! OAuth2 Google
 // func (controller *UserController) OauthLogin(c echo.Context) error {

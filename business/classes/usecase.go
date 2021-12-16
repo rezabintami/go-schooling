@@ -44,5 +44,13 @@ func (cu *ClassUsecase) GetAll(ctx context.Context) ([]Domain, error) {
 		return []Domain{}, err
 	}
 	return result, nil
-
 }
+
+func (cu *ClassUsecase) GetByID(ctx context.Context, id int) (*Domain, error) {
+	result, err := cu.classRepository.GetByID(ctx, id)
+	if err != nil {
+		return &Domain{}, err
+	}
+	return result, nil
+}
+

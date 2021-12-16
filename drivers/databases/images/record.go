@@ -15,13 +15,16 @@ type Images struct {
 	DeletedAt gorm.DeletedAt
 }
 
-func (rec *Images) toDomain() images.Domain {
-	return images.Domain{
-		ID:        rec.ID,
-		Name:      rec.Name,
-		Path:      rec.Path,
-		CreatedAt: rec.CreatedAt,
+func (rec *Images) ToDomain() (res *images.Domain) {
+	if rec != nil {
+		res = &images.Domain{
+			ID:        rec.ID,
+			Name:      rec.Name,
+			Path:      rec.Path,
+			CreatedAt: rec.CreatedAt,
+		}
 	}
+	return res
 }
 
 func fromDomain(imageDomain images.Domain) *Images {

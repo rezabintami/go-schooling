@@ -1,10 +1,12 @@
 package request
 
-import "go-schooling/business/users"
+import (
+	"go-schooling/business/users"
+)
 
 type Users struct {
 	Name     string `json:"name"`
-	Password string `json:"-"`
+	Password string `json:"password,omitempty"`
 	Email    string `json:"email"`
 }
 

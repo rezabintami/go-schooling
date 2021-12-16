@@ -22,13 +22,18 @@ import (
 	_articleRepo "go-schooling/drivers/databases/articles"
 
 	_categoryUsecase "go-schooling/business/category"
+	_categoryController "go-schooling/controllers/category"
 	_categoryRepo "go-schooling/drivers/databases/category"
 
 	_imageUsecase "go-schooling/business/images"
 	_imageController "go-schooling/controllers/images"
 	_imageRepo "go-schooling/drivers/databases/images"
 
-	// _midtrans "ticketing/drivers/thirdparties/midtrans"
+	_transactionUsecase "go-schooling/business/transactions"
+	_transactionController "go-schooling/controllers/transactions"
+	_transactionRepo "go-schooling/drivers/databases/transactions"
+
+	_midtrans "go-schooling/drivers/midtrans"
 
 	_config "go-schooling/app/config"
 	_dbMysqlDriver "go-schooling/drivers/mysql"
@@ -98,6 +103,7 @@ func main() {
 
 	categoryRepo := _categoryRepo.NewMySQLCategoryRepository(mysql_db)
 	categoryUsecase := _categoryUsecase.NewCategoryUsecase(categoryRepo, timeoutContext)
+	categoryCtrl := _categoryController.NewCategoryController(categoryUsecase)
 
 	imageRepo := _imageRepo.NewMySQLImagesRepository(mysql_db)
 	imageUsecase := _imageUsecase.NewImageUsecase(imageRepo, configGoogleStorage, timeoutContext)
@@ -107,13 +113,20 @@ func main() {
 	articleUsecase := _articleUsecase.NewArticleUsecase(articleRepo, categoryUsecase, imageUsecase, &configJWT, timeoutContext)
 	articleCtrl := _articleController.NewArticleController(articleUsecase)
 
+	MidtransRepo := _midtrans.NewTransactionMidtrans()
+	transactionRepo := _transactionRepo.NewMySQLTransactionRepository(mysql_db)
+	transactionUsecase := _transactionUsecase.NewTransactionUsecase(transactionRepo, timeoutContext, userRepo, MidtransRepo)
+	transactionCtrl := _transactionController.NewTransactionsController(transactionUsecase)
+
 	routesInit := _routes.ControllerList{
-		JWTMiddleware:     configJWT.Init(),
-		UserController:    *userCtrl,
-		TeacherController: *teacherCtrl,
-		ClassController:   *classCtrl,
-		ArticleController: *articleCtrl,
-		ImageController:   *imagesCtrl,
+		JWTMiddleware:         configJWT.Init(),
+		UserController:        *userCtrl,
+		TeacherController:     *teacherCtrl,
+		ClassController:       *classCtrl,
+		ArticleController:     *articleCtrl,
+		ImageController:       *imagesCtrl,
+		TransactionController: *transactionCtrl,
+		CategoriesController:  *categoryCtrl,
 	}
 	routesInit.RouteRegister(e)
 

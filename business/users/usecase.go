@@ -25,6 +25,7 @@ func NewUserUsecase(ur Repository, jwtauth *middleware.ConfigJWT, timeout time.D
 
 func (uc *UserUsecase) Login(ctx context.Context, email, password string, sso bool) (string, error) {
 	existedUser, err := uc.userRepository.GetByEmail(ctx, email)
+
 	if err != nil {
 		return "", err
 	}
@@ -39,6 +40,7 @@ func (uc *UserUsecase) Login(ctx context.Context, email, password string, sso bo
 
 func (uc *UserUsecase) GetByID(ctx context.Context, id int) (Domain, error) {
 	result, err := uc.userRepository.GetByID(ctx, id)
+
 	if err != nil {
 		return Domain{}, err
 	}
@@ -73,10 +75,35 @@ func (uc *UserUsecase) Register(ctx context.Context, userDomain *Domain, sso boo
 
 	userDomain.Sso = sso
 	userDomain.Roles = "USER"
+	userDomain.Graduated = false
 	err = uc.userRepository.Register(ctx, userDomain)
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (uc *UserUsecase) GetAll(ctx context.Context) ([]Domain, error) {
+	result, err := uc.userRepository.GetAll(ctx)
+	if err != nil {
+		return []Domain{}, err
+	}
+	return result, nil
+}
+
+func (uc *UserUsecase) Fetch(ctx context.Context, page, perpage int) ([]Domain, int, error) {
+	if page <= 0 {
+		page = 1
+	}
+	if perpage <= 0 {
+		perpage = 25
+	}
+
+	res, total, err := uc.userRepository.Fetch(ctx, page, perpage)
+	if err != nil {
+		return []Domain{}, 0, err
+	}
+
+	return res, total, nil
 }

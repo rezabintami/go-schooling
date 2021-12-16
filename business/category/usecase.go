@@ -19,7 +19,7 @@ func NewCategoryUsecase(ur Repository, timeout time.Duration) Usecase {
 }
 
 func (cu *CategoryUsecase) GetAll(ctx context.Context) ([]Domain, error) {
-	resp, err := cu.categoryRepository.Find(ctx, "")
+	resp, err := cu.categoryRepository.GetAll(ctx)
 	if err != nil {
 		return []Domain{}, err
 	}
@@ -39,14 +39,33 @@ func (cu *CategoryUsecase) GetByID(ctx context.Context, id int) (Domain, error) 
 }
 
 func (cu *CategoryUsecase) GetByActive(ctx context.Context, active bool) ([]Domain, error) {
-	findActive := "false"
+	findActive := false
 	if active {
-		findActive = "true"
+		findActive = true
 	}
+
 	resp, err := cu.categoryRepository.Find(ctx, findActive)
 	if err != nil {
 		return []Domain{}, err
 	}
 
 	return resp, nil
+}
+
+func (cu *CategoryUsecase) Store(ctx context.Context, categoryDomain *Domain) error {
+	err := cu.categoryRepository.Store(ctx, categoryDomain)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (cu *CategoryUsecase) Delete(ctx context.Context, id int) error {
+	err := cu.categoryRepository.Delete(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

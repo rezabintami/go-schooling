@@ -25,7 +25,7 @@ func (repository *mysqlClassesRepository) GetAll(ctx context.Context) ([]classes
 	}
 	var allClasses []classes.Domain
 	for _, value := range getClasses {
-		allClasses = append(allClasses, value.toDomain())
+		allClasses = append(allClasses, *value.ToDomain())
 	}
 	return allClasses, nil
 }
@@ -49,4 +49,14 @@ func (repository *mysqlClassesRepository) Delete(ctx context.Context, id int) er
 	}
 
 	return nil
+}
+
+func (repository *mysqlClassesRepository) GetByID(ctx context.Context, id int) (*classes.Domain, error) {
+	class := Classes{}
+	result := repository.Conn.Where("id = ?", id).First(&class)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return class.ToDomain(), nil
 }
