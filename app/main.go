@@ -22,6 +22,7 @@ import (
 	_articleRepo "go-schooling/drivers/databases/articles"
 
 	_categoryUsecase "go-schooling/business/category"
+	_categoryController "go-schooling/controllers/category"
 	_categoryRepo "go-schooling/drivers/databases/category"
 
 	_imageUsecase "go-schooling/business/images"
@@ -102,6 +103,7 @@ func main() {
 
 	categoryRepo := _categoryRepo.NewMySQLCategoryRepository(mysql_db)
 	categoryUsecase := _categoryUsecase.NewCategoryUsecase(categoryRepo, timeoutContext)
+	categoryCtrl := _categoryController.NewCategoryController(categoryUsecase)
 
 	imageRepo := _imageRepo.NewMySQLImagesRepository(mysql_db)
 	imageUsecase := _imageUsecase.NewImageUsecase(imageRepo, configGoogleStorage, timeoutContext)
@@ -124,6 +126,7 @@ func main() {
 		ArticleController:     *articleCtrl,
 		ImageController:       *imagesCtrl,
 		TransactionController: *transactionCtrl,
+		CategoriesController:  *categoryCtrl,
 	}
 	routesInit.RouteRegister(e)
 

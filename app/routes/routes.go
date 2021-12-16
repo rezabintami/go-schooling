@@ -3,6 +3,7 @@ package routes
 import (
 	_middleware "go-schooling/app/middleware"
 	"go-schooling/controllers/articles"
+	"go-schooling/controllers/category"
 	"go-schooling/controllers/classes"
 	"go-schooling/controllers/images"
 	"go-schooling/controllers/teachers"
@@ -21,6 +22,7 @@ type ControllerList struct {
 	ArticleController     articles.ArticleController
 	ImageController       images.ImageController
 	TransactionController transactions.TransactionsController
+	CategoriesController  category.CategoriesController
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
@@ -40,7 +42,7 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 
 	//! CATEGORY
 	category := apiV1.Group("/category")
-	category.GET("", cl.ClassController.GetAll, middleware.JWTWithConfig(cl.JWTMiddleware)) //! BELUM ADA FUNGSI
+	category.GET("/all", cl.CategoriesController.GetAll, middleware.JWTWithConfig(cl.JWTMiddleware))
 
 	//! ARTICLES USER
 	article := apiV1.Group("/article")
@@ -89,8 +91,11 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	adminArticles.PUT("/:id", cl.ArticleController.Update)
 
 	//! ADMIN CATEGORY
-	adminCategory := admin.Group("/category", middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation("SUPERUSER")) //! BELUM ADA FUNGSI
-	adminCategory.POST("", cl.ClassController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))                                   //! BELUM ADA FUNGSI
-	adminCategory.DELETE("/:id", cl.ClassController.Delete, middleware.JWTWithConfig(cl.JWTMiddleware))                            //! BELUM ADA FUNGSI
+	adminCategory := admin.Group("/category", middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation("SUPERUSER"))
+	adminCategory.GET("/all", cl.CategoriesController.GetAll, middleware.JWTWithConfig(cl.JWTMiddleware))
+	adminCategory.GET("/", cl.CategoriesController.GetByActive, middleware.JWTWithConfig(cl.JWTMiddleware))
+	adminCategory.GET("/:id", cl.CategoriesController.GetByID, middleware.JWTWithConfig(cl.JWTMiddleware))
+	adminCategory.POST("", cl.CategoriesController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))
+	adminCategory.DELETE("/:id", cl.CategoriesController.Delete, middleware.JWTWithConfig(cl.JWTMiddleware)) 
 
 }
