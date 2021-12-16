@@ -22,3 +22,18 @@ func FromDomain(domain category.Domain) Category {
 		UpdatedAt: domain.UpdatedAt,
 	}
 }
+
+func FromListDomain(categoryDomain []category.Domain) *[]Category {
+	allCategory := []Category{}
+	for _, value := range categoryDomain {
+		category := Category{
+			Id:        value.ID,
+			Title:     value.Title,
+			Active:    value.Active,
+			CreatedAt: value.CreatedAt,
+			UpdatedAt: value.UpdatedAt,
+		}
+		allCategory = append(allCategory, category)
+	}
+	return &allCategory
+}
