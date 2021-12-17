@@ -21,13 +21,13 @@ func (repository *mysqlArticlesRepository) Fetch(ctx context.Context, page, perp
 	rec := []Articles{}
 
 	offset := (page - 1) * perpage
-	err := repository.Conn.Preload("categories").Offset(offset).Limit(perpage).Find(&rec).Error
+	err := repository.Conn.Preload("Categories").Preload("Images").Offset(offset).Limit(perpage).Find(&rec).Error
 	if err != nil {
 		return []articles.Domain{}, 0, err
 	}
 
 	var totalData int64
-	err = repository.Conn.Count(&totalData).Error
+	err = repository.Conn.Model(&rec).Count(&totalData).Error
 	if err != nil {
 		return []articles.Domain{}, 0, err
 	}

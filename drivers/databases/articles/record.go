@@ -3,7 +3,6 @@ package articles
 import (
 	"go-schooling/business/articles"
 	"go-schooling/drivers/databases/category"
-	"go-schooling/drivers/databases/images"
 	"time"
 )
 
@@ -12,9 +11,7 @@ type Articles struct {
 	Title      string
 	Content    string `gorm:"column:content_data"`
 	CategoryID int
-	Category   category.Category `gorm:"foreignKey:CategoryID;references:ID"`
-	ImageID    int
-	Images     images.Images `gorm:"foreignKey:ImageID;references:ID"`
+	Category   *category.Category `gorm:"foreignKey:CategoryID;references:ID"`
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 }
@@ -25,7 +22,6 @@ func fromDomain(domain *articles.Domain) *Articles {
 		Title:      domain.Title,
 		Content:    domain.Content,
 		CategoryID: domain.CategoryID,
-		ImageID:    domain.ImageID,
 	}
 }
 
@@ -35,9 +31,6 @@ func (rec *Articles) toDomain() articles.Domain {
 		Title:        rec.Title,
 		Content:      rec.Content,
 		CategoryID:   rec.CategoryID,
-		CategoryName: rec.Category.Title,
-		ImageID:      rec.ImageID,
-		ImagePath:    rec.Images.Path,
 		CreatedAt:    rec.CreatedAt,
 		UpdatedAt:    rec.UpdatedAt,
 	}

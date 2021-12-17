@@ -17,7 +17,7 @@ type Articles struct {
 
 type ArticlesResponse struct {
 	Articles *[]Articles `json:"articles"`
-	Page     int         `json:"page"`
+	Count     int         `json:"count"`
 }
 
 func FromDomain(articleDomain articles.Domain) *Articles {
@@ -25,8 +25,6 @@ func FromDomain(articleDomain articles.Domain) *Articles {
 		ID:         articleDomain.ID,
 		Title:      articleDomain.Title,
 		Content:    articleDomain.Content,
-		CategoryID: articleDomain.CategoryID,
-		ImageID:    articleDomain.ImageID,
 		CreatedAt:  articleDomain.CreatedAt,
 		UpdatedAt:  articleDomain.UpdatedAt,
 	}
@@ -39,8 +37,6 @@ func FromListDomain(articlesDomain []articles.Domain) *[]Articles {
 			ID:         value.ID,
 			Title:      value.Title,
 			Content:    value.Content,
-			CategoryID: value.CategoryID,
-			ImageID:    value.ImageID,
 			CreatedAt:  value.CreatedAt,
 			UpdatedAt:  value.UpdatedAt,
 		}
@@ -49,15 +45,13 @@ func FromListDomain(articlesDomain []articles.Domain) *[]Articles {
 	return &articles
 }
 
-func FromListPageDomain(articlesDomain []articles.Domain, Page int) *ArticlesResponse {
+func FromListPageDomain(articlesDomain []articles.Domain, Count int) *ArticlesResponse {
 	articles := []Articles{}
 	for _, value := range articlesDomain {
 		article := Articles{
 			ID:         value.ID,
 			Title:      value.Title,
 			Content:    value.Content,
-			CategoryID: value.CategoryID,
-			ImageID:    value.ImageID,
 			CreatedAt:  value.CreatedAt,
 			UpdatedAt:  value.UpdatedAt,
 		}
@@ -65,6 +59,6 @@ func FromListPageDomain(articlesDomain []articles.Domain, Page int) *ArticlesRes
 	}
 	articlesResponse := ArticlesResponse{}
 	articlesResponse.Articles = &articles
-	articlesResponse.Page = Page
+	articlesResponse.Count = Count
 	return &articlesResponse
 }

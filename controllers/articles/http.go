@@ -1,6 +1,7 @@
 package articles
 
 import (
+	"fmt"
 	"go-schooling/business/articles"
 	"go-schooling/controllers/articles/request"
 	"go-schooling/controllers/articles/response"
@@ -9,6 +10,7 @@ import (
 
 	base_response "go-schooling/helper/response"
 
+	"github.com/gosimple/slug"
 	echo "github.com/labstack/echo/v4"
 )
 
@@ -29,6 +31,8 @@ func (controller *ArticleController) Store(c echo.Context) error {
 	if err := c.Bind(&req); err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
+	
+	req.Title = slug.Make(req.Title)
 
 	err := controller.articleUsecase.Store(ctx, req.ToDomain())
 	if err != nil {
@@ -62,8 +66,8 @@ func (controller *ArticleController) Update(c echo.Context) error {
 func (controller *ArticleController) GetByTitle(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	title := c.QueryParam("title")
-
+	title := c.Param("title")
+	fmt.Println(title)
 	articles, err := controller.articleUsecase.GetByTitle(ctx, title)
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
@@ -75,7 +79,7 @@ func (controller *ArticleController) GetByTitle(c echo.Context) error {
 func (controller *ArticleController) GetByID(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	id := c.QueryParam("id")
+	id := c.Param("id")
 	idInt, _ := strconv.Atoi(id)
 
 	articles, err := controller.articleUsecase.GetByID(ctx, idInt)
@@ -89,14 +93,12 @@ func (controller *ArticleController) GetByID(c echo.Context) error {
 func (controller *ArticleController) Fetch(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	start := c.QueryParam("start")
-	startInt, _ := strconv.Atoi(start)
-	last := c.QueryParam("last")
-	lastInt, _ := strconv.Atoi(last)
-	articles, page, err := controller.articleUsecase.Fetch(ctx, startInt, lastInt)
+	page, _ := strconv.Atoi(c.QueryParam("page"))
+	perpage, _ := strconv.Atoi(c.QueryParam("per_page"))
+	articles, count, err := controller.articleUsecase.Fetch(ctx, page, perpage)
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	return base_response.NewSuccessResponse(c, response.FromListPageDomain(articles, page))
+	return base_response.NewSuccessResponse(c, response.FromListPageDomain(articles, count))
 }
