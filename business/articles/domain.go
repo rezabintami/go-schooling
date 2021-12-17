@@ -2,19 +2,18 @@ package articles
 
 import (
 	"context"
+	"go-schooling/drivers/databases/category"
 	"time"
 )
 
 type Domain struct {
-	ID           int
-	Title        string
-	Content      string
-	CategoryID   int
-	CategoryName string
-	ImageID      int
-	ImagePath    string
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
+	ID         int
+	Title      string
+	Content    string
+	CategoryID int
+	Category   *category.Category
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
 }
 
 type Usecase interface {

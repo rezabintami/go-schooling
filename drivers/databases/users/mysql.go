@@ -25,7 +25,7 @@ func (repository *mysqlUsersRepository) GetAll(ctx context.Context) ([]users.Dom
 	}
 	var usrs []users.Domain
 	for _, value := range allUsers {
-		usrs = append(usrs, *value.toDomain())
+		usrs = append(usrs, *value.ToDomain())
 	}
 	return usrs, nil
 }
@@ -36,7 +36,7 @@ func (repository *mysqlUsersRepository) GetByID(ctx context.Context, id int) (us
 	if result.Error != nil {
 		return users.Domain{}, result.Error
 	}
-	return *usersById.toDomain(), nil
+	return *usersById.ToDomain(), nil
 }
 
 func (repository *mysqlUsersRepository) Update(ctx context.Context, userDomain *users.Domain, id int) error {
@@ -56,7 +56,7 @@ func (repository *mysqlUsersRepository) GetByEmail(ctx context.Context, email st
 	if err != nil {
 		return users.Domain{}, err
 	}
-	return *rec.toDomain(), nil
+	return *rec.ToDomain(), nil
 }
 
 func (repository *mysqlUsersRepository) Register(ctx context.Context, userDomain *users.Domain) error {
@@ -86,7 +86,7 @@ func (repository *mysqlUsersRepository) Fetch(ctx context.Context, page, perpage
 
 	var domainUsers []users.Domain
 	for _, value := range rec {
-		domainUsers = append(domainUsers, *value.toDomain())
+		domainUsers = append(domainUsers, *value.ToDomain())
 	}
 	
 	return domainUsers, int(totalData), nil

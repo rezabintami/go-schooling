@@ -45,8 +45,9 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	category.GET("/all", cl.CategoriesController.GetAll, middleware.JWTWithConfig(cl.JWTMiddleware))
 
 	//! ARTICLES USER
-	article := apiV1.Group("/article")
-	article.GET("/", cl.ArticleController.Fetch)
+	article := apiV1.Group("/articles")
+	article.GET("", cl.ArticleController.Fetch)
+	article.GET("/:title", cl.ArticleController.GetByTitle)
 
 	//! AUTH
 	auth := apiV1.Group("/auth")
@@ -87,7 +88,6 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	adminArticles.POST("", cl.ArticleController.Store)
 	adminArticles.GET("", cl.ArticleController.Fetch)
 	adminArticles.GET("/:id", cl.ArticleController.GetByID)
-	adminArticles.GET("/:title", cl.ArticleController.GetByTitle)
 	adminArticles.PUT("/:id", cl.ArticleController.Update)
 
 	//! ADMIN CATEGORY

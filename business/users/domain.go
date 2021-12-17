@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"go-schooling/business/classes"
-	"go-schooling/business/images"
 	"time"
 )
 
@@ -14,8 +13,6 @@ type Domain struct {
 	Password         string
 	ClassID          sql.NullInt64
 	Classes          *classes.Domain
-	ImageID          sql.NullInt64
-	Images           *images.Domain
 	Email            string
 	NISN             *string
 	BirthCertificate *string

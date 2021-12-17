@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"go-schooling/business/users"
 	"go-schooling/drivers/databases/classes"
-	"go-schooling/drivers/databases/images"
 	"go-schooling/helper/convertpointer"
 	"time"
 )
@@ -15,8 +14,6 @@ type Users struct {
 	Password         sql.NullString
 	ClassID          sql.NullInt64
 	Classes          *classes.Classes `gorm:"foreignKey:ClassID;references:ID"`
-	ImageID          sql.NullInt64
-	Images           *images.Images `gorm:"foreignKey:ImageID;references:ID"`
 	Email            sql.NullString
 	NISN             sql.NullString
 	BirthCertificate sql.NullString
@@ -30,13 +27,12 @@ type Users struct {
 	UpdatedAt        time.Time
 }
 
-func (rec *Users) toDomain() *users.Domain {
+func (rec *Users) ToDomain() *users.Domain {
 	return &users.Domain{
 		ID:               rec.ID,
 		Name:             rec.Name.String,
 		Password:         rec.Password.String,
 		Classes:          rec.Classes.ToDomain(),
-		Images:           rec.Images.ToDomain(),
 		Email:            rec.Email.String,
 		NISN:             convertpointer.ConvertPointerString(&rec.NISN.String),
 		BirthCertificate: convertpointer.ConvertPointerString(&rec.BirthCertificate.String),
@@ -57,7 +53,6 @@ func fromDomain(userDomain users.Domain) *Users {
 		Name:             sql.NullString{String: userDomain.Name, Valid: true},
 		Password:         sql.NullString{String: userDomain.Password, Valid: true},
 		ClassID:          userDomain.ClassID,
-		ImageID:          userDomain.ImageID,
 		Email:            sql.NullString{String: userDomain.Email, Valid: true},
 		NISN:             sql.NullString{String: *userDomain.NISN, Valid: true},
 		BirthCertificate: sql.NullString{String: *userDomain.BirthCertificate, Valid: true},

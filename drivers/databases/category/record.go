@@ -10,7 +10,6 @@ type Category struct {
 	Title       string
 	Description string
 	Active      bool
-	Archive     bool
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }
