@@ -12,16 +12,19 @@ type Teachers struct {
 	Roles    string `json:"roles"`
 }
 
-func FromDomain(teacherDomain teachers.Domain) *Teachers {
-	return &Teachers{
-		ID:       teacherDomain.ID,
-		Name:     teacherDomain.Name,
-		Password: teacherDomain.Password,
-		Email:    teacherDomain.Email,
-		NIP:      teacherDomain.NIP,
-		Photo:    teacherDomain.Photo,
-		Roles:    teacherDomain.Roles,
+func FromDomain(teacherDomain *teachers.Domain) (res *Teachers) {
+	if teacherDomain != nil {
+		res = &Teachers{
+			ID:       teacherDomain.ID,
+			Name:     teacherDomain.Name,
+			Password: teacherDomain.Password,
+			Email:    teacherDomain.Email,
+			NIP:      teacherDomain.NIP,
+			Photo:    teacherDomain.Photo,
+			Roles:    teacherDomain.Roles,
+		}
 	}
+	return res
 }
 
 func FromListDomain(teacherDomain []teachers.Domain) *[]Teachers {

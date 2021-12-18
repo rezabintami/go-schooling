@@ -58,7 +58,6 @@ func (uc *UserUsecase) Update(ctx context.Context, userDomain *Domain, id int) e
 func (uc *UserUsecase) Register(ctx context.Context, userDomain *Domain, sso bool) error {
 	ctx, cancel := context.WithTimeout(ctx, uc.contextTimeout)
 	defer cancel()
-
 	existedUser, err := uc.userRepository.GetByEmail(ctx, userDomain.Email)
 	if err != nil {
 		if !strings.Contains(err.Error(), "not found") {

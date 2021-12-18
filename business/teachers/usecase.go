@@ -4,19 +4,18 @@ import (
 	"context"
 	"go-schooling/app/middleware"
 	"go-schooling/business"
-	"go-schooling/business/users"
 	"go-schooling/helper/encrypt"
 	"time"
 )
 
 type TeacherUsecase struct {
 	teacherRepository Repository
-	userRepository    users.Repository
+	userRepository    interface{}
 	contextTimeout    time.Duration
 	jwtAuth           *middleware.ConfigJWT
 }
 
-func NewTeacherUsecase(tr Repository, ur users.Repository, jwtauth *middleware.ConfigJWT, timeout time.Duration) Usecase {
+func NewTeacherUsecase(tr Repository, ur interface{}, jwtauth *middleware.ConfigJWT, timeout time.Duration) Usecase {
 	return &TeacherUsecase{
 		teacherRepository: tr,
 		userRepository:    ur,
@@ -65,7 +64,7 @@ func (tu *TeacherUsecase) Login(ctx context.Context, email, password string) (st
 		return "", err
 	}
 
-	if !encrypt.ValidateHash(password, existedUser.Password){
+	if !encrypt.ValidateHash(password, existedUser.Password) {
 		return "", business.ErrEmailPasswordNotFound
 	}
 

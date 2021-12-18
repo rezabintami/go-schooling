@@ -3,14 +3,12 @@ package response
 import (
 	"go-schooling/business/users"
 	classResp "go-schooling/controllers/classes/response"
-	imageResp "go-schooling/controllers/images/response"
 )
 
 type Users struct {
 	ID               int                `gorm:"primary_key" json:"id"`
 	Name             string             `json:"name"`
 	Classes          *classResp.Classes `json:"class"`
-	Images           *imageResp.Images  `json:"images"`
 	Email            string             `json:"email"`
 	NISN             *string            `json:"nisn"`
 	BirthCertificate *string            `json:"birth_certificate"`
