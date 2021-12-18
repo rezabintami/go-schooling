@@ -106,11 +106,12 @@ func (controller *UserController) Update(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	id := middleware.GetUser(c).ID
-	req := request.Users{}
+	req := request.UpdateUsers{}
 	if err := c.Bind(&req); err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
-	err := controller.userUsecase.Update(ctx, req.ToDomain(), id)
+	
+	err := controller.userUsecase.Update(ctx, req.ToUpdateDomain(), id)
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
@@ -144,7 +145,6 @@ func (controller *UserController) Fetch(c echo.Context) error {
 
 	return base_response.NewSuccessResponse(c, response.FromListPageDomain(articles, count))
 }
-
 
 // //! OAuth2 Google
 // func (controller *UserController) OauthLogin(c echo.Context) error {
@@ -217,7 +217,7 @@ func (controller *UserController) Fetch(c echo.Context) error {
 // 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 // 	}
 // 	defer UserInfo.Body.Close()
-	
+
 // 	req := request.Users{}
 // 	json.NewDecoder(UserInfo.Body).Decode(&req)
 

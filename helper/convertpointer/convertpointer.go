@@ -6,3 +6,10 @@ func ConvertPointerString(x *string) *string {
 	}
 	return x
 }
+
+func ConvertNilPointerString(x *string) string {
+	if x == nil {
+		return ""
+	}
+	return *x
+}

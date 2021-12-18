@@ -2,12 +2,16 @@ package classes
 
 import (
 	"context"
+	"database/sql"
+	"go-schooling/business/teachers"
 	"time"
 )
 
 type Domain struct {
 	ID        int
 	Name      string
+	TeacherID sql.NullInt64
+	Teachers  *teachers.Domain
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

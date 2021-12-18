@@ -23,7 +23,7 @@ func (repository *mysqlTeachersRepository) GetByID(ctx context.Context, id int) 
 	if result.Error != nil {
 		return teachers.Domain{}, result.Error
 	}
-	return teacherById.toDomain(), nil
+	return *teacherById.ToDomain(), nil
 }
 
 func (repository *mysqlTeachersRepository) GetAll(ctx context.Context) ([]teachers.Domain, error) {
@@ -34,7 +34,7 @@ func (repository *mysqlTeachersRepository) GetAll(ctx context.Context) ([]teache
 	}
 	var allTeachers []teachers.Domain
 	for _, value := range getTeachers {
-		allTeachers = append(allTeachers, value.toDomain())
+		allTeachers = append(allTeachers, *value.ToDomain())
 	}
 	return allTeachers, nil
 }
@@ -67,5 +67,5 @@ func (repository *mysqlTeachersRepository) GetByEmail(ctx context.Context, email
 	if err != nil {
 		return teachers.Domain{}, err
 	}
-	return rec.toDomain(), nil
+	return *rec.ToDomain(), nil
 }

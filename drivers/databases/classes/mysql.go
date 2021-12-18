@@ -19,7 +19,7 @@ func NewMySQLClassesRepository(conn *gorm.DB) classes.Repository {
 
 func (repository *mysqlClassesRepository) GetAll(ctx context.Context) ([]classes.Domain, error) {
 	getClasses := []Classes{}
-	result := repository.Conn.Find(&getClasses)
+	result := repository.Conn.Preload("Teachers").Find(&getClasses)
 	if result.Error != nil {
 		return []classes.Domain{}, result.Error
 	}
