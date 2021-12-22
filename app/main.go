@@ -93,13 +93,13 @@ func main() {
 	userUsecase := _userUsecase.NewUserUsecase(userRepo, &configJWT, timeoutContext)
 	userCtrl := _userController.NewUserController(userUsecase)
 
-	teacherRepo := _teacherRepo.NewMySQLTeachersRepository(mysql_db)
-	teacherUsecase := _teacherUsecase.NewTeacherUsecase(teacherRepo, userRepo, &configJWT, timeoutContext)
-	teacherCtrl := _teacherController.NewTeacherController(teacherUsecase)
-
 	classRepo := _classRepo.NewMySQLClassesRepository(mysql_db)
 	classUsecase := _classUsecase.NewClassUsecase(classRepo, &configJWT, timeoutContext)
 	classCtrl := _classController.NewClassController(classUsecase)
+
+	teacherRepo := _teacherRepo.NewMySQLTeachersRepository(mysql_db)
+	teacherUsecase := _teacherUsecase.NewTeacherUsecase(teacherRepo, userRepo, &configJWT, timeoutContext)
+	teacherCtrl := _teacherController.NewTeacherController(teacherUsecase)
 
 	categoryRepo := _categoryRepo.NewMySQLCategoryRepository(mysql_db)
 	categoryUsecase := _categoryUsecase.NewCategoryUsecase(categoryRepo, timeoutContext)
