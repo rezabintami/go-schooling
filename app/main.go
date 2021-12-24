@@ -21,6 +21,8 @@ import (
 	_articleController "go-schooling/controllers/articles"
 	_articleRepo "go-schooling/drivers/databases/articles"
 
+	_categoryarticlesRepo "go-schooling/drivers/databases/categoryarticles"
+
 	_categoryUsecase "go-schooling/business/category"
 	_categoryController "go-schooling/controllers/category"
 	_categoryRepo "go-schooling/drivers/databases/category"
@@ -101,8 +103,10 @@ func main() {
 	teacherUsecase := _teacherUsecase.NewTeacherUsecase(teacherRepo, userRepo, &configJWT, timeoutContext)
 	teacherCtrl := _teacherController.NewTeacherController(teacherUsecase)
 
+	categoryarticlesRepo := _categoryarticlesRepo.NewMySQLCategoryArticlesRepository(mysql_db)
+
 	categoryRepo := _categoryRepo.NewMySQLCategoryRepository(mysql_db)
-	categoryUsecase := _categoryUsecase.NewCategoryUsecase(categoryRepo, timeoutContext)
+	categoryUsecase := _categoryUsecase.NewCategoryUsecase(categoryRepo, categoryarticlesRepo, timeoutContext)
 	categoryCtrl := _categoryController.NewCategoryController(categoryUsecase)
 
 	imageRepo := _imageRepo.NewMySQLImagesRepository(mysql_db)
