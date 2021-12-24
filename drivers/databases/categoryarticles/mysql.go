@@ -27,3 +27,23 @@ func (repository *mysqlCategoryArticlesRepository) Store(ctx context.Context, ca
 
 	return nil
 }
+
+func (repository *mysqlCategoryArticlesRepository) GetByArticleID(ctx context.Context, id int) (categoryarticles.Domain, error) {
+	categoryArticles := CategoryArticles{}
+	result := repository.Conn.Where("articles_id = ?", id).First(&categoryArticles)
+	if result.Error != nil {
+		return categoryarticles.Domain{}, result.Error
+	}
+
+	return *categoryArticles.ToDomain(), nil
+}
+
+func (repository *mysqlCategoryArticlesRepository) GetByCategoryID(ctx context.Context, id int) (categoryarticles.Domain, error) {
+	categoryArticles := CategoryArticles{}
+	result := repository.Conn.Where("category_id = ?", id).First(&categoryArticles)
+	if result.Error != nil {
+		return categoryarticles.Domain{}, result.Error
+	}
+
+	return *categoryArticles.ToDomain(), nil
+}

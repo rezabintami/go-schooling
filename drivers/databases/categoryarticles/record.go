@@ -13,3 +13,10 @@ func fromDomain(categoryarticlesDomain categoryarticles.Domain) *CategoryArticle
 		CategoryID: categoryarticlesDomain.CategoryID,
 	}
 }
+
+func (rec *CategoryArticles) ToDomain() *categoryarticles.Domain {
+	return &categoryarticles.Domain{
+		ArticlesID: rec.ArticlesID,
+		CategoryID: rec.CategoryID,
+	}
+}
