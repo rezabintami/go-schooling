@@ -1,14 +1,19 @@
 package categoryarticles
 
-import "context"
+import (
+	"context"
+	"go-schooling/business/category"
+)
 
 type Domain struct {
-	ArticleID int
+	ArticleID  int
 	CategoryID int
+	Category   *category.Domain
 }
 
 type Repository interface {
 	Store(ctx context.Context, data *Domain) error
-	GetByArticleID(ctx context.Context, id int) (Domain, error)
+	GetAllByArticleID(ctx context.Context, id int) ([]Domain, error)
+	// GetByArticleID(ctx context.Context, id int) (Domain, error)
 	GetByCategoryID(ctx context.Context, id int) (Domain, error)
 }

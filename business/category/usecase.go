@@ -3,21 +3,18 @@ package category
 import (
 	"context"
 	"go-schooling/business"
-	"go-schooling/business/categoryarticles"
 	"time"
 )
 
 type CategoryUsecase struct {
-	categoryRepository         Repository
-	categoryArticlesRepository categoryarticles.Repository
-	contextTimeout             time.Duration
+	categoryRepository Repository
+	contextTimeout     time.Duration
 }
 
-func NewCategoryUsecase(ur Repository, ca categoryarticles.Repository, timeout time.Duration) Usecase {
+func NewCategoryUsecase(ur Repository, timeout time.Duration) Usecase {
 	return &CategoryUsecase{
-		categoryRepository:         ur,
-		categoryArticlesRepository: ca,
-		contextTimeout:             timeout,
+		categoryRepository: ur,
+		contextTimeout:     timeout,
 	}
 }
 

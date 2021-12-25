@@ -28,19 +28,34 @@ func (repository *mysqlCategoryArticlesRepository) Store(ctx context.Context, ca
 	return nil
 }
 
-func (repository *mysqlCategoryArticlesRepository) GetByArticleID(ctx context.Context, id int) (categoryarticles.Domain, error) {
-	categoryArticles := CategoryArticles{}
-	result := repository.Conn.Where("articles_id = ?", id).First(&categoryArticles)
+// func (repository *mysqlCategoryArticlesRepository) GetByArticleID(ctx context.Context, id int) (categoryarticles.Domain, error) {
+// 	categoryArticles := CategoryArticles{}
+// 	result := repository.Conn.Preload("Category").Where("article_id = ?", id).First(&categoryArticles)
+// 	if result.Error != nil {
+// 		return categoryarticles.Domain{}, result.Error
+// 	}
+
+// 	return *categoryArticles.ToDomain(), nil
+// }
+
+func (repository *mysqlCategoryArticlesRepository) GetAllByArticleID(ctx context.Context, id int) ([]categoryarticles.Domain, error) {
+	allCategoryArticles := []CategoryArticles{}
+	result := repository.Conn.Preload("Category").Where("article_id = ?", id).Find(&allCategoryArticles)
 	if result.Error != nil {
-		return categoryarticles.Domain{}, result.Error
+		return []categoryarticles.Domain{}, result.Error
 	}
 
-	return *categoryArticles.ToDomain(), nil
+	allCategoryArticleDomain := []categoryarticles.Domain{}
+	for _, value := range allCategoryArticles {
+		allCategoryArticleDomain = append(allCategoryArticleDomain, *value.ToDomain())
+	}
+
+	return allCategoryArticleDomain, nil
 }
 
 func (repository *mysqlCategoryArticlesRepository) GetByCategoryID(ctx context.Context, id int) (categoryarticles.Domain, error) {
 	categoryArticles := CategoryArticles{}
-	result := repository.Conn.Where("category_id = ?", id).First(&categoryArticles)
+	result := repository.Conn.Preload("Articles").Where("category_id = ?", id).First(&categoryArticles)
 	if result.Error != nil {
 		return categoryarticles.Domain{}, result.Error
 	}

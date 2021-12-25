@@ -106,7 +106,7 @@ func main() {
 	categoryarticlesRepo := _categoryarticlesRepo.NewMySQLCategoryArticlesRepository(mysql_db)
 
 	categoryRepo := _categoryRepo.NewMySQLCategoryRepository(mysql_db)
-	categoryUsecase := _categoryUsecase.NewCategoryUsecase(categoryRepo, categoryarticlesRepo, timeoutContext)
+	categoryUsecase := _categoryUsecase.NewCategoryUsecase(categoryRepo, timeoutContext)
 	categoryCtrl := _categoryController.NewCategoryController(categoryUsecase)
 
 	imageRepo := _imageRepo.NewMySQLImagesRepository(mysql_db)
@@ -136,7 +136,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "9090"
+		port = "8000"
 	}
 	log.Print("listening on PORT : ", port)
 	log.Fatal(e.Start(":" + port))

@@ -1,7 +1,6 @@
 package articles
 
 import (
-	"fmt"
 	"go-schooling/business/articles"
 	"go-schooling/controllers/articles/request"
 	"go-schooling/controllers/articles/response"
@@ -31,7 +30,7 @@ func (controller *ArticleController) Store(c echo.Context) error {
 	if err := c.Bind(&req); err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
-	
+
 	req.Title = slug.Make(req.Title)
 
 	err := controller.articleUsecase.Store(ctx, req.ToDomain())
@@ -67,7 +66,7 @@ func (controller *ArticleController) GetByTitle(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	title := c.Param("title")
-	fmt.Println(title)
+
 	articles, err := controller.articleUsecase.GetByTitle(ctx, title)
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)

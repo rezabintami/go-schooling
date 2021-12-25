@@ -24,5 +24,6 @@ func (rec *CategoryArticles) ToDomain() *categoryarticles.Domain {
 	return &categoryarticles.Domain{
 		ArticleID:  rec.ArticleID,
 		CategoryID: rec.CategoryID,
+		Category:   rec.Category.ToDomain(),
 	}
 }

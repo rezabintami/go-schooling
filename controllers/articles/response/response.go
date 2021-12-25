@@ -6,54 +6,57 @@ import (
 )
 
 type Articles struct {
-	ID         int       `json:"id"`
-	Title      string    `json:"title"`
-	Content    string    `json:"content"`
-	CategoryID int       `json:"category_id"`
-	ImageID    int       `json:"image_id"`
-	CreatedAt  time.Time `json:"created_at"`
-	UpdatedAt  time.Time `json:"updated_at"`
+	ID        int       `json:"id"`
+	Title     string    `json:"title"`
+	Content   string    `json:"content"`
+	Catagory  []string  `json:"catagory"`
+	ImageID   int       `json:"image_id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 type ArticlesResponse struct {
 	Articles *[]Articles `json:"articles"`
-	Count     int         `json:"count"`
+	Count    int         `json:"count"`
 }
 
-func FromDomain(articleDomain articles.Domain) *Articles {
+func FromDomain(articleDomain articles.DomainFromArticles) *Articles {
 	return &Articles{
-		ID:         articleDomain.ID,
-		Title:      articleDomain.Title,
-		Content:    articleDomain.Content,
-		CreatedAt:  articleDomain.CreatedAt,
-		UpdatedAt:  articleDomain.UpdatedAt,
+		ID:        articleDomain.ID,
+		Title:     articleDomain.Title,
+		Content:   articleDomain.Content,
+		Catagory:  articleDomain.Category,
+		CreatedAt: articleDomain.CreatedAt,
+		UpdatedAt: articleDomain.UpdatedAt,
 	}
 }
 
-func FromListDomain(articlesDomain []articles.Domain) *[]Articles {
-	articles := []Articles{}
-	for _, value := range articlesDomain {
-		article := Articles{
-			ID:         value.ID,
-			Title:      value.Title,
-			Content:    value.Content,
-			CreatedAt:  value.CreatedAt,
-			UpdatedAt:  value.UpdatedAt,
-		}
-		articles = append(articles, article)
-	}
-	return &articles
-}
+// func FromListDomain(articlesDomain []articles.DomainFromArticles) *[]Articles {
+// 	articles := []Articles{}
+// 	for _, value := range articlesDomain {
+// 		article := Articles{
+// 			ID:        value.ID,
+// 			Title:     value.Title,
+// 			Content:   value.Content,
+// 			Catagory:  value.Category,
+// 			CreatedAt: value.CreatedAt,
+// 			UpdatedAt: value.UpdatedAt,
+// 		}
+// 		articles = append(articles, article)
+// 	}
+// 	return &articles
+// }
 
-func FromListPageDomain(articlesDomain []articles.Domain, Count int) *ArticlesResponse {
+func FromListPageDomain(articlesDomain []articles.DomainFromArticles, Count int) *ArticlesResponse {
 	articles := []Articles{}
 	for _, value := range articlesDomain {
 		article := Articles{
-			ID:         value.ID,
-			Title:      value.Title,
-			Content:    value.Content,
-			CreatedAt:  value.CreatedAt,
-			UpdatedAt:  value.UpdatedAt,
+			ID:        value.ID,
+			Title:     value.Title,
+			Content:   value.Content,
+			Catagory:  value.Category,
+			CreatedAt: value.CreatedAt,
+			UpdatedAt: value.UpdatedAt,
 		}
 		articles = append(articles, article)
 	}
