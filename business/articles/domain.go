@@ -2,7 +2,6 @@ package articles
 
 import (
 	"context"
-	"go-schooling/drivers/databases/category"
 	"time"
 )
 
@@ -10,8 +9,6 @@ type Domain struct {
 	ID         int
 	Title      string
 	Content    string
-	CategoryID int
-	Category   *category.Category
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 }
