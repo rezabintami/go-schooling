@@ -28,10 +28,9 @@ func NewArticleUsecase(ur Repository, ca categoryarticles.Repository, iu images.
 	}
 }
 
-func (au *ArticleUsecase) Fetch(ctx context.Context, page, perpage int) ([]Domain, int, error) {
+func (au *ArticleUsecase) Fetch(ctx context.Context, page, perpage int) ([]DomainFromArticles, int, error) {
 	ctx, cancel := context.WithTimeout(ctx, au.contextTimeout)
 	defer cancel()
-
 	if page <= 0 {
 		page = 1
 	}
@@ -41,53 +40,85 @@ func (au *ArticleUsecase) Fetch(ctx context.Context, page, perpage int) ([]Domai
 
 	res, total, err := au.articleRepository.Fetch(ctx, page, perpage)
 	if err != nil {
-		return []Domain{}, 0, err
+		return []DomainFromArticles{}, 0, err
+	}
+
+	for j, value := range res {
+		var ListCategory []string
+		category, err := au.categoryArticlesRepository.GetAllByArticleID(ctx, value.ID)
+		if err != nil {
+			return []DomainFromArticles{}, 0, err
+		}
+		for _, value := range category {
+			ListCategory = append(ListCategory, value.Category.Title)
+		}
+		res[j].Category = ListCategory
 	}
 
 	return res, total, nil
 }
 
-func (au *ArticleUsecase) GetByID(ctx context.Context, id int) (Domain, error) {
+func (au *ArticleUsecase) GetByID(ctx context.Context, id int) (DomainFromArticles, error) {
 	ctx, cancel := context.WithTimeout(ctx, au.contextTimeout)
 	defer cancel()
 
 	if id <= 0 {
-		return Domain{}, business.ErrNewsIDResource
+		return DomainFromArticles{}, business.ErrNewsIDResource
 	}
 	res, err := au.articleRepository.GetByID(ctx, id)
 	if err != nil {
-		return Domain{}, err
+		return DomainFromArticles{}, err
 	}
+
+	var ListCategory []string
+	category, err := au.categoryArticlesRepository.GetAllByArticleID(ctx, res.ID)
+	if err != nil {
+		return DomainFromArticles{}, err
+	}
+	for _, value := range category {
+		ListCategory = append(ListCategory, value.Category.Title)
+	}
+	res.Category = ListCategory
 
 	return res, nil
 }
 
-func (au *ArticleUsecase) GetByTitle(ctx context.Context, title string) (Domain, error) {
+func (au *ArticleUsecase) GetByTitle(ctx context.Context, title string) (DomainFromArticles, error) {
 	ctx, cancel := context.WithTimeout(ctx, au.contextTimeout)
 	defer cancel()
 
 	if strings.TrimSpace(title) == "" {
-		return Domain{}, business.ErrNewsTitleResource
+		return DomainFromArticles{}, business.ErrNewsTitleResource
 	}
 	res, err := au.articleRepository.GetByTitle(ctx, title)
 	if err != nil {
-		return Domain{}, err
+		return DomainFromArticles{}, err
 	}
+
+	var ListCategory []string
+	category, err := au.categoryArticlesRepository.GetAllByArticleID(ctx, res.ID)
+	if err != nil {
+		return DomainFromArticles{}, err
+	}
+	for _, value := range category {
+		ListCategory = append(ListCategory, value.Category.Title)
+	}
+	res.Category = ListCategory
 
 	return res, nil
 }
 
 func (au *ArticleUsecase) Store(ctx context.Context, articleDomain *Domain) error {
-	for i := range articleDomain.Category {
-		categoryart := categoryarticles.Domain{}
-		categoryart.ArticleID = articleDomain.ID
-		categoryart.CategoryID = articleDomain.Category[i]
-		au.categoryArticlesRepository.Store(ctx, &categoryart)
-	}
-
-	err := au.articleRepository.Store(ctx, articleDomain)
+	articleID, err := au.articleRepository.Store(ctx, articleDomain)
 	if err != nil {
 		return err
+	}
+
+	for i := range articleDomain.Category {
+		categoryart := categoryarticles.Domain{}
+		categoryart.ArticleID = articleID
+		categoryart.CategoryID = articleDomain.Category[i]
+		au.categoryArticlesRepository.Store(ctx, &categoryart)
 	}
 
 	return nil
