@@ -71,7 +71,7 @@ func (repository *mysqlArticlesRepository) Store(ctx context.Context, articleDom
 func (repository *mysqlArticlesRepository) Update(ctx context.Context, articleDomain *articles.Domain, id int) error {
 	articleUpdate := fromDomain(articleDomain)
 
-	result := repository.Conn.Preload("CategoryArticles").Preload("Category").Where("id = ?", id).Updates(&articleUpdate)
+	result := repository.Conn.Preload("CategoryArticles").Where("id = ?", id).Updates(&articleUpdate)
 	if result.Error != nil {
 		return result.Error
 	}

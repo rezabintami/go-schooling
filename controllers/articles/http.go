@@ -44,7 +44,7 @@ func (controller *ArticleController) Store(c echo.Context) error {
 func (controller *ArticleController) Update(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	id := c.QueryParam("id")
+	id := c.Param("id")
 	idInt, _ := strconv.Atoi(id)
 
 	req := request.Articles{}
