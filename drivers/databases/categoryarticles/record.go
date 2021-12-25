@@ -7,23 +7,22 @@ import (
 )
 
 type CategoryArticles struct {
-	ArticleID int 
+	ArticleID  int
 	Articles   *articles.Articles `gorm:"foreignKey:ArticleID;references:ID"`
 	CategoryID int
 	Category   *category.Category `gorm:"foreignKey:CategoryID;references:ID"`
-
 }
 
 func fromDomain(categoryarticlesDomain categoryarticles.Domain) *CategoryArticles {
 	return &CategoryArticles{
-		ArticleID: categoryarticlesDomain.ArticleID,	
+		ArticleID:  categoryarticlesDomain.ArticleID,
 		CategoryID: categoryarticlesDomain.CategoryID,
 	}
 }
 
 func (rec *CategoryArticles) ToDomain() *categoryarticles.Domain {
 	return &categoryarticles.Domain{
-		ArticleID: rec.ArticleID,
+		ArticleID:  rec.ArticleID,
 		CategoryID: rec.CategoryID,
 	}
 }
