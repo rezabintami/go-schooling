@@ -3,8 +3,8 @@ package categoryarticles
 import "context"
 
 type Domain struct {
-	ArticlesID string
-	CategoryID string
+	ArticleID int
+	CategoryID int
 }
 
 type Repository interface {

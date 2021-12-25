@@ -1,22 +1,29 @@
 package categoryarticles
 
-import "go-schooling/business/categoryarticles"
+import (
+	"go-schooling/business/categoryarticles"
+	"go-schooling/drivers/databases/articles"
+	"go-schooling/drivers/databases/category"
+)
 
 type CategoryArticles struct {
-	ArticlesID string
-	CategoryID string
+	ArticleID int 
+	Articles   *articles.Articles `gorm:"foreignKey:ArticleID;references:ID"`
+	CategoryID int
+	Category   *category.Category `gorm:"foreignKey:CategoryID;references:ID"`
+
 }
 
 func fromDomain(categoryarticlesDomain categoryarticles.Domain) *CategoryArticles {
 	return &CategoryArticles{
-		ArticlesID: categoryarticlesDomain.ArticlesID,	
+		ArticleID: categoryarticlesDomain.ArticleID,	
 		CategoryID: categoryarticlesDomain.CategoryID,
 	}
 }
 
 func (rec *CategoryArticles) ToDomain() *categoryarticles.Domain {
 	return &categoryarticles.Domain{
-		ArticlesID: rec.ArticlesID,
+		ArticleID: rec.ArticleID,
 		CategoryID: rec.CategoryID,
 	}
 }
