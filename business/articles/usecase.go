@@ -125,9 +125,22 @@ func (au *ArticleUsecase) Store(ctx context.Context, articleDomain *Domain) erro
 }
 
 func (au *ArticleUsecase) Update(ctx context.Context, articleDomain *Domain, id int) error {
-	err := au.articleRepository.Update(ctx, articleDomain, id)
+	err := au.categoryArticlesRepository.DeleteByArticleID(ctx, id)
 	if err != nil {
 		return err
 	}
+
+	err = au.articleRepository.Update(ctx, articleDomain, id)
+	if err != nil {
+		return err
+	}
+
+	for i := range articleDomain.Category {
+		categoryart := categoryarticles.Domain{}
+		categoryart.ArticleID = id
+		categoryart.CategoryID = articleDomain.Category[i]
+		au.categoryArticlesRepository.Store(ctx, &categoryart)
+	}
+
 	return nil
 }

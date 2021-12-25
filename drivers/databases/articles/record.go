@@ -21,15 +21,15 @@ func fromDomain(domain *articles.Domain) *Articles {
 	}
 }
 
-func (rec *Articles) toDomain() articles.Domain {
-	return articles.Domain{
-		ID:        rec.ID,
-		Title:     rec.Title,
-		Content:   rec.Content,
-		CreatedAt: rec.CreatedAt,
-		UpdatedAt: rec.UpdatedAt,
-	}
-}
+// func (rec *Articles) toDomain() articles.Domain {
+// 	return articles.Domain{
+// 		ID:        rec.ID,
+// 		Title:     rec.Title,
+// 		Content:   rec.Content,
+// 		CreatedAt: rec.CreatedAt,
+// 		UpdatedAt: rec.UpdatedAt,
+// 	}
+// }
 
 func (rec *Articles) toDomainFromArticles() articles.DomainFromArticles {
 	return articles.DomainFromArticles{
