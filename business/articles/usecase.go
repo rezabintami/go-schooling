@@ -4,27 +4,27 @@ import (
 	"context"
 	"go-schooling/app/middleware"
 	"go-schooling/business"
-	"go-schooling/business/category"
+	"go-schooling/business/categoryarticles"
 	"go-schooling/business/images"
 	"strings"
 	"time"
 )
 
 type ArticleUsecase struct {
-	articleRepository Repository
-	categoryUsecase   category.Usecase
-	imageUsecase      images.Usecase
-	contextTimeout    time.Duration
-	jwtAuth           *middleware.ConfigJWT
+	articleRepository          Repository
+	categoryArticlesRepository categoryarticles.Repository
+	imageUsecase               images.Usecase
+	contextTimeout             time.Duration
+	jwtAuth                    *middleware.ConfigJWT
 }
 
-func NewArticleUsecase(ur Repository, cu category.Usecase, iu images.Usecase, jwtauth *middleware.ConfigJWT, timeout time.Duration) Usecase {
+func NewArticleUsecase(ur Repository, ca categoryarticles.Repository, iu images.Usecase, jwtauth *middleware.ConfigJWT, timeout time.Duration) Usecase {
 	return &ArticleUsecase{
-		articleRepository: ur,
-		categoryUsecase:   cu,
-		imageUsecase:      iu,
-		jwtAuth:           jwtauth,
-		contextTimeout:    timeout,
+		articleRepository:          ur,
+		categoryArticlesRepository: ca,
+		imageUsecase:               iu,
+		jwtAuth:                    jwtauth,
+		contextTimeout:             timeout,
 	}
 }
 
@@ -78,6 +78,13 @@ func (au *ArticleUsecase) GetByTitle(ctx context.Context, title string) (Domain,
 }
 
 func (au *ArticleUsecase) Store(ctx context.Context, articleDomain *Domain) error {
+	for i := range articleDomain.Category {
+		categoryart := categoryarticles.Domain{}
+		categoryart.ArticleID = articleDomain.ID
+		categoryart.CategoryID = articleDomain.Category[i]
+		au.categoryArticlesRepository.Store(ctx, &categoryart)
+	}
+
 	err := au.articleRepository.Store(ctx, articleDomain)
 	if err != nil {
 		return err
