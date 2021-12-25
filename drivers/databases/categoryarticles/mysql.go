@@ -62,3 +62,23 @@ func (repository *mysqlCategoryArticlesRepository) GetByCategoryID(ctx context.C
 
 	return *categoryArticles.ToDomain(), nil
 }
+
+func (repository *mysqlCategoryArticlesRepository) DeleteByArticleID(ctx context.Context, id int) error {
+	categoryArticles := CategoryArticles{}
+	result := repository.Conn.Preload("Articles").Preload("Category").Where("article_id = ?", id).Delete(&categoryArticles)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}
+
+func (repository *mysqlCategoryArticlesRepository) DeleteByCategoryID(ctx context.Context, id int) error {
+	categoryArticles := CategoryArticles{}
+	result := repository.Conn.Preload("Articles").Preload("Category").Where("article_id = ?", id).Delete(&categoryArticles)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}
