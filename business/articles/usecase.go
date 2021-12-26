@@ -63,7 +63,7 @@ func (au *ArticleUsecase) GetByID(ctx context.Context, id int) (DomainFromArticl
 	defer cancel()
 
 	if id <= 0 {
-		return DomainFromArticles{}, business.ErrNewsIDResource
+		return DomainFromArticles{}, business.ErrArticleIDResource
 	}
 	res, err := au.articleRepository.GetByID(ctx, id)
 	if err != nil {
@@ -88,7 +88,7 @@ func (au *ArticleUsecase) GetByTitle(ctx context.Context, title string) (DomainF
 	defer cancel()
 
 	if strings.TrimSpace(title) == "" {
-		return DomainFromArticles{}, business.ErrNewsTitleResource
+		return DomainFromArticles{}, business.ErrArticleTitleResource
 	}
 	res, err := au.articleRepository.GetByTitle(ctx, title)
 	if err != nil {
