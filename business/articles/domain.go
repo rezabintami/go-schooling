@@ -29,6 +29,7 @@ type Usecase interface {
 	Fetch(ctx context.Context, page, perpage int) ([]DomainFromArticles, int, error)
 	GetByID(ctx context.Context, id int) (DomainFromArticles, error)
 	GetByTitle(ctx context.Context, title string) (DomainFromArticles, error)
+	GetByCategory(ctx context.Context, category []string) ([]DomainFromArticles, error)
 }
 
 type Repository interface {
