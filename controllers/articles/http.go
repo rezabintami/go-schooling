@@ -75,6 +75,19 @@ func (controller *ArticleController) GetByTitle(c echo.Context) error {
 	return base_response.NewSuccessResponse(c, response.FromDomain(articles))
 }
 
+func (controller *ArticleController) GetByCategory(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	var listCategory []string
+	values, _ := c.FormParams()
+	listCategory = values["category"]
+	articles, err := controller.articleUsecase.GetByCategory(ctx, listCategory)
+	if err != nil {
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+	return base_response.NewSuccessResponse(c, response.FromListDomain(articles))
+}
+
 func (controller *ArticleController) GetByID(c echo.Context) error {
 	ctx := c.Request().Context()
 

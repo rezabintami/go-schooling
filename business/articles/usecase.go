@@ -4,8 +4,11 @@ import (
 	"context"
 	"go-schooling/app/middleware"
 	"go-schooling/business"
+	"go-schooling/business/category"
 	"go-schooling/business/categoryarticles"
 	"go-schooling/business/images"
+	"sort"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -13,15 +16,17 @@ import (
 type ArticleUsecase struct {
 	articleRepository          Repository
 	categoryArticlesRepository categoryarticles.Repository
+	categoryRepository         category.Repository
 	imageUsecase               images.Usecase
 	contextTimeout             time.Duration
 	jwtAuth                    *middleware.ConfigJWT
 }
 
-func NewArticleUsecase(ur Repository, ca categoryarticles.Repository, iu images.Usecase, jwtauth *middleware.ConfigJWT, timeout time.Duration) Usecase {
+func NewArticleUsecase(ur Repository, ca categoryarticles.Repository, cr category.Repository, iu images.Usecase, jwtauth *middleware.ConfigJWT, timeout time.Duration) Usecase {
 	return &ArticleUsecase{
 		articleRepository:          ur,
 		categoryArticlesRepository: ca,
+		categoryRepository:         cr,
 		imageUsecase:               iu,
 		jwtAuth:                    jwtauth,
 		contextTimeout:             timeout,
@@ -106,6 +111,64 @@ func (au *ArticleUsecase) GetByTitle(ctx context.Context, title string) (DomainF
 	res.Category = ListCategory
 
 	return res, nil
+}
+
+func (au *ArticleUsecase) GetByCategory(ctx context.Context, category []string) ([]DomainFromArticles, error) {
+	ctx, cancel := context.WithTimeout(ctx, au.contextTimeout)
+	defer cancel()
+
+	var allListArticle []DomainFromArticles
+	var ListArticle []DomainFromArticles
+
+	for iter := range category {
+		categoryID, _ := strconv.Atoi(category[iter])
+		categoryarticles, err := au.categoryArticlesRepository.GetAllByCategoryID(ctx, categoryID)
+
+		if err != nil {
+			return []DomainFromArticles{}, err
+		}
+
+		for _, value := range categoryarticles {
+			var ListCategory []string
+
+			article, err := au.articleRepository.GetByID(ctx, value.ArticleID)
+			if err != nil {
+				return []DomainFromArticles{}, err
+			}
+
+			category, err := au.categoryArticlesRepository.GetAllByArticleID(ctx, article.ID)
+			if err != nil {
+				return []DomainFromArticles{}, err
+			}
+
+			for _, value := range category {
+				ListCategory = append(ListCategory, value.Category.Title)
+			}
+
+			article.Category = ListCategory
+			ListArticle = append(ListArticle, article)
+		}
+		if iter == 0 {
+			allListArticle = append(allListArticle, ListArticle...)
+		} else {
+			for _, value := range ListArticle {
+				var isExist bool
+				for _, value2 := range allListArticle {
+					if value.ID == value2.ID {
+						isExist = true
+					}
+				}
+				if !isExist {
+					allListArticle = append(allListArticle, value)
+				}
+			}
+		}
+	}
+	sort.Slice(allListArticle, func(i, j int) bool {
+		return allListArticle[i].ID < allListArticle[j].ID
+	})
+
+	return allListArticle, nil
 }
 
 func (au *ArticleUsecase) Store(ctx context.Context, articleDomain *Domain) error {

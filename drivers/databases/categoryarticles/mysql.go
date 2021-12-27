@@ -53,6 +53,21 @@ func (repository *mysqlCategoryArticlesRepository) GetAllByArticleID(ctx context
 	return allCategoryArticleDomain, nil
 }
 
+func (repository *mysqlCategoryArticlesRepository) GetAllByCategoryID(ctx context.Context, id int) ([]categoryarticles.Domain, error) {
+	allCategoryArticles := []CategoryArticles{}
+	result := repository.Conn.Preload("Articles").Where("category_id = ?", id).Find(&allCategoryArticles)
+	if result.Error != nil {
+		return []categoryarticles.Domain{}, result.Error
+	}
+
+	allCategoryArticleDomain := []categoryarticles.Domain{}
+	for _, value := range allCategoryArticles {
+		allCategoryArticleDomain = append(allCategoryArticleDomain, *value.ToDomain())
+	}
+
+	return allCategoryArticleDomain, nil
+}
+
 func (repository *mysqlCategoryArticlesRepository) GetByCategoryID(ctx context.Context, id int) (categoryarticles.Domain, error) {
 	categoryArticles := CategoryArticles{}
 	result := repository.Conn.Preload("Articles").Where("category_id = ?", id).First(&categoryArticles)

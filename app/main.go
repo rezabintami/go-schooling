@@ -114,7 +114,7 @@ func main() {
 	imagesCtrl := _imageController.NewImageController(imageUsecase)
 
 	articleRepo := _articleRepo.NewMySQLArticlesRepository(mysql_db)
-	articleUsecase := _articleUsecase.NewArticleUsecase(articleRepo, categoryarticlesRepo, imageUsecase, &configJWT, timeoutContext)
+	articleUsecase := _articleUsecase.NewArticleUsecase(articleRepo, categoryarticlesRepo, categoryRepo, imageUsecase, &configJWT, timeoutContext)
 	articleCtrl := _articleController.NewArticleController(articleUsecase)
 
 	MidtransRepo := _midtrans.NewTransactionMidtrans()

@@ -31,21 +31,21 @@ func FromDomain(articleDomain articles.DomainFromArticles) *Articles {
 	}
 }
 
-// func FromListDomain(articlesDomain []articles.DomainFromArticles) *[]Articles {
-// 	articles := []Articles{}
-// 	for _, value := range articlesDomain {
-// 		article := Articles{
-// 			ID:        value.ID,
-// 			Title:     value.Title,
-// 			Content:   value.Content,
-// 			Catagory:  value.Category,
-// 			CreatedAt: value.CreatedAt,
-// 			UpdatedAt: value.UpdatedAt,
-// 		}
-// 		articles = append(articles, article)
-// 	}
-// 	return &articles
-// }
+func FromListDomain(articlesDomain []articles.DomainFromArticles) *[]Articles {
+	articles := []Articles{}
+	for _, value := range articlesDomain {
+		article := Articles{
+			ID:        value.ID,
+			Title:     value.Title,
+			Content:   value.Content,
+			Catagory:  value.Category,
+			CreatedAt: value.CreatedAt,
+			UpdatedAt: value.UpdatedAt,
+		}
+		articles = append(articles, article)
+	}
+	return &articles
+}
 
 func FromListPageDomain(articlesDomain []articles.DomainFromArticles, Count int) *ArticlesResponse {
 	articles := []Articles{}
