@@ -57,3 +57,7 @@ func MiddlewareLogging(next echo.HandlerFunc) echo.HandlerFunc {
 		return next(c)
 	}
 }
+
+func MiddlewareLoggingEntry(c echo.Context, request, response interface{}) {
+	logging.LogEntry(c, request, response).Info("incoming request")
+}

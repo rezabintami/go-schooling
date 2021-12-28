@@ -60,14 +60,30 @@ func (controller *UserController) Register(c echo.Context) error {
 
 	req := request.Users{}
 	if err := c.Bind(&req); err != nil {
+		res := map[string]interface{}{
+			"success": "false",
+			"error":   err.Error(),
+		}
+		middleware.MiddlewareLoggingEntry(c, req, res)
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
+	request := map[string]interface{}{
+		"email": req.Email,
+	}
 	err := controller.userUsecase.Register(ctx, req.ToDomain(), false)
 	if err != nil {
+		res := map[string]interface{}{
+			"success": "false",
+			"error":   err.Error(),
+		}
+		middleware.MiddlewareLoggingEntry(c, request, res)
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
-
+	res := map[string]interface{}{
+		"success": "true",
+	}
+	middleware.MiddlewareLoggingEntry(c, request, res)
 	return base_response.NewSuccessInsertResponse(c, "Successfully inserted")
 }
 
@@ -110,7 +126,7 @@ func (controller *UserController) Update(c echo.Context) error {
 	if err := c.Bind(&req); err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
-	
+
 	err := controller.userUsecase.Update(ctx, req.ToUpdateDomain(), id)
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)

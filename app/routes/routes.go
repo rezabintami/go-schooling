@@ -26,7 +26,7 @@ type ControllerList struct {
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
-	e.Use(_middleware.MiddlewareLogging)
+	// e.Use(_middleware.MiddlewareLogging)
 
 	apiV1 := e.Group("/api/v1")
 
