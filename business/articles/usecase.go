@@ -7,6 +7,7 @@ import (
 	"go-schooling/business/category"
 	"go-schooling/business/categoryarticles"
 	"go-schooling/business/images"
+	"go-schooling/helper/logging"
 	"sort"
 	"strconv"
 	"strings"
@@ -20,9 +21,10 @@ type ArticleUsecase struct {
 	imageUsecase               images.Usecase
 	contextTimeout             time.Duration
 	jwtAuth                    *middleware.ConfigJWT
+	logger                     logging.Logger
 }
 
-func NewArticleUsecase(ur Repository, ca categoryarticles.Repository, cr category.Repository, iu images.Usecase, jwtauth *middleware.ConfigJWT, timeout time.Duration) Usecase {
+func NewArticleUsecase(ur Repository, ca categoryarticles.Repository, cr category.Repository, iu images.Usecase, jwtauth *middleware.ConfigJWT, timeout time.Duration, logger logging.Logger) Usecase {
 	return &ArticleUsecase{
 		articleRepository:          ur,
 		categoryArticlesRepository: ca,
@@ -30,6 +32,7 @@ func NewArticleUsecase(ur Repository, ca categoryarticles.Repository, cr categor
 		imageUsecase:               iu,
 		jwtAuth:                    jwtauth,
 		contextTimeout:             timeout,
+		logger:                     logger,
 	}
 }
 

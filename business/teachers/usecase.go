@@ -5,6 +5,7 @@ import (
 	"go-schooling/app/middleware"
 	"go-schooling/business"
 	"go-schooling/helper/encrypt"
+	"go-schooling/helper/logging"
 	"time"
 )
 
@@ -13,14 +14,16 @@ type TeacherUsecase struct {
 	userRepository    interface{}
 	contextTimeout    time.Duration
 	jwtAuth           *middleware.ConfigJWT
+	logger            logging.Logger
 }
 
-func NewTeacherUsecase(tr Repository, ur interface{}, jwtauth *middleware.ConfigJWT, timeout time.Duration) Usecase {
+func NewTeacherUsecase(tr Repository, ur interface{}, jwtauth *middleware.ConfigJWT, timeout time.Duration, logger logging.Logger) Usecase {
 	return &TeacherUsecase{
 		teacherRepository: tr,
 		userRepository:    ur,
 		jwtAuth:           jwtauth,
 		contextTimeout:    timeout,
+		logger:            logger,
 	}
 }
 
