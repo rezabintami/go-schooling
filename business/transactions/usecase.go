@@ -5,23 +5,26 @@ import (
 	"fmt"
 	"go-schooling/business/payments"
 	"go-schooling/business/users"
+	"go-schooling/helper/logging"
 	"go-schooling/helper/statuskey"
 	"time"
 )
 
 type TransactionUsecase struct {
-	transactionRepository    Repository
-	userRepository     users.Repository
-	paymentsRepository payments.Repository
-	contextTimeout     time.Duration
+	transactionRepository Repository
+	userRepository        users.Repository
+	paymentsRepository    payments.Repository
+	contextTimeout        time.Duration
+	logger                logging.Logger
 }
 
-func NewTransactionUsecase(tr Repository, timeout time.Duration, us users.Repository, pay payments.Repository) Usecase {
+func NewTransactionUsecase(tr Repository, timeout time.Duration, us users.Repository, pay payments.Repository, logger logging.Logger) Usecase {
 	return &TransactionUsecase{
-		transactionRepository:    tr,
-		contextTimeout:     timeout,
-		userRepository:     us,
-		paymentsRepository: pay,
+		transactionRepository: tr,
+		contextTimeout:        timeout,
+		userRepository:        us,
+		paymentsRepository:    pay,
+		logger:                logger,
 	}
 }
 
@@ -41,7 +44,7 @@ func (tu *TransactionUsecase) CreateTransactions(ctx context.Context, transactio
 	transactionDomain.PaymentUrl = response.RedirectURL
 	err = tu.transactionRepository.Update(ctx, transactionDomain)
 	if err != nil {
-		return  payments.DomainResponse{}, err
+		return payments.DomainResponse{}, err
 	}
 
 	return response, nil

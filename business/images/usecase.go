@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"go-schooling/drivers/googlestorage"
+	"go-schooling/helper/logging"
 	"mime/multipart"
 	"time"
 )
@@ -12,13 +13,15 @@ type ImageUsecase struct {
 	imageRepository Repository
 	contextTimeout  time.Duration
 	googlestorage   googlestorage.Connection
+	logger          logging.Logger
 }
 
-func NewImageUsecase(ur Repository, googlestorage googlestorage.Connection, timeout time.Duration) Usecase {
+func NewImageUsecase(ur Repository, googlestorage googlestorage.Connection, timeout time.Duration, logger logging.Logger) Usecase {
 	return &ImageUsecase{
 		imageRepository: ur,
 		googlestorage:   googlestorage,
 		contextTimeout:  timeout,
+		logger:          logger,
 	}
 }
 

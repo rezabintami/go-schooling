@@ -9,6 +9,19 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+type Logger struct {
+	Log *log.Logger
+}
+
+func NewLogger() Logger {
+	logger := log.New()
+	logger.Out = os.Stdout
+
+	return Logger{
+		Log: logger,
+	}
+}
+
 func Logging(c echo.Context) *log.Entry {
 	if c == nil {
 		return log.WithFields(log.Fields{
