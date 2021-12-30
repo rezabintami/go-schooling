@@ -30,7 +30,7 @@ func (controller *TeacherController) GetByID(c echo.Context) error {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	return base_response.NewSuccessResponse(c, response.FromDomain(teacher))
+	return base_response.NewSuccessResponse(c, response.FromDomain(&teacher))
 }
 
 func (controller *TeacherController) Update(c echo.Context) error {
@@ -49,7 +49,7 @@ func (controller *TeacherController) Update(c echo.Context) error {
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
-	return base_response.NewSuccessResponse(c, response.FromDomain(teacher))
+	return base_response.NewSuccessResponse(c, response.FromDomain(&teacher))
 }
 
 func (controller *TeacherController) GetAll(c echo.Context) error {

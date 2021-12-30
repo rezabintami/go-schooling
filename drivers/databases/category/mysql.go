@@ -29,12 +29,11 @@ func (repository *mysqlCategoryRepository) Find(ctx context.Context, active bool
 
 	categoryDomain := []category.Domain{}
 	for _, value := range rec {
-		categoryDomain = append(categoryDomain, value.ToDomain())
+		categoryDomain = append(categoryDomain, *value.ToDomain())
 	}
 
 	return categoryDomain, nil
 }
-
 
 func (repository *mysqlCategoryRepository) GetAll(ctx context.Context) ([]category.Domain, error) {
 	rec := []Category{}
@@ -44,7 +43,7 @@ func (repository *mysqlCategoryRepository) GetAll(ctx context.Context) ([]catego
 	}
 	categoryDomain := []category.Domain{}
 	for _, value := range rec {
-		categoryDomain = append(categoryDomain, value.ToDomain())
+		categoryDomain = append(categoryDomain, *value.ToDomain())
 	}
 
 	return categoryDomain, nil
@@ -56,7 +55,7 @@ func (repository *mysqlCategoryRepository) FindByID(id int) (category.Domain, er
 	if err := repository.Conn.Where("id = ?", id).First(&rec).Error; err != nil {
 		return category.Domain{}, err
 	}
-	return rec.ToDomain(), nil
+	return *rec.ToDomain(), nil
 }
 
 func (repository *mysqlCategoryRepository) Store(ctx context.Context, classDomain *category.Domain) error {
@@ -79,4 +78,3 @@ func (repository *mysqlCategoryRepository) Delete(ctx context.Context, id int) e
 
 	return nil
 }
-

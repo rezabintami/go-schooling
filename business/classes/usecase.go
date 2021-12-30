@@ -3,6 +3,7 @@ package classes
 import (
 	"context"
 	"go-schooling/app/middleware"
+	"go-schooling/helper/logging"
 	"time"
 )
 
@@ -10,13 +11,15 @@ type ClassUsecase struct {
 	classRepository Repository
 	jwtAuth         *middleware.ConfigJWT
 	contextTimeout  time.Duration
+	logger          logging.Logger
 }
 
-func NewClassUsecase(cr Repository, jwtauth *middleware.ConfigJWT, timeout time.Duration) Usecase {
+func NewClassUsecase(cr Repository, jwtauth *middleware.ConfigJWT, timeout time.Duration, logger logging.Logger) Usecase {
 	return &ClassUsecase{
 		classRepository: cr,
 		jwtAuth:         jwtauth,
 		contextTimeout:  timeout,
+		logger:          logger,
 	}
 }
 
@@ -53,4 +56,3 @@ func (cu *ClassUsecase) GetByID(ctx context.Context, id int) (*Domain, error) {
 	}
 	return result, nil
 }
-

@@ -5,6 +5,7 @@ import (
 	"go-schooling/app/middleware"
 	"go-schooling/business"
 	"go-schooling/helper/encrypt"
+	"go-schooling/helper/logging"
 	"strings"
 	"time"
 )
@@ -13,13 +14,15 @@ type UserUsecase struct {
 	userRepository Repository
 	contextTimeout time.Duration
 	jwtAuth        *middleware.ConfigJWT
+	logger         logging.Logger
 }
 
-func NewUserUsecase(ur Repository, jwtauth *middleware.ConfigJWT, timeout time.Duration) Usecase {
+func NewUserUsecase(ur Repository, jwtauth *middleware.ConfigJWT, timeout time.Duration, logger logging.Logger) Usecase {
 	return &UserUsecase{
 		userRepository: ur,
 		jwtAuth:        jwtauth,
 		contextTimeout: timeout,
+		logger:         logger,
 	}
 }
 
@@ -58,7 +61,6 @@ func (uc *UserUsecase) Update(ctx context.Context, userDomain *Domain, id int) e
 func (uc *UserUsecase) Register(ctx context.Context, userDomain *Domain, sso bool) error {
 	ctx, cancel := context.WithTimeout(ctx, uc.contextTimeout)
 	defer cancel()
-
 	existedUser, err := uc.userRepository.GetByEmail(ctx, userDomain.Email)
 	if err != nil {
 		if !strings.Contains(err.Error(), "not found") {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go-schooling/drivers/databases/articles"
 	"go-schooling/drivers/databases/category"
+	"go-schooling/drivers/databases/categoryarticles"
 	"go-schooling/drivers/databases/classes"
 	"go-schooling/drivers/databases/images"
 	"go-schooling/drivers/databases/teachers"
@@ -44,6 +45,7 @@ func (config *ConfigDB) InitialMysqlDB() *gorm.DB {
 		&category.Category{},
 		&images.Images{},
 		&transactions.Transactions{},
+		&categoryarticles.CategoryArticles{},
 	)
 
 	return db

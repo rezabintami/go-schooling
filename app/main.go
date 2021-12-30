@@ -8,6 +8,7 @@ import (
 	_userController "go-schooling/controllers/users"
 	_userRepo "go-schooling/drivers/databases/users"
 	"go-schooling/drivers/googlestorage"
+	"go-schooling/helper/logging"
 
 	_teacherUsecase "go-schooling/business/teachers"
 	_teacherController "go-schooling/controllers/teachers"
@@ -20,6 +21,8 @@ import (
 	_articleUsecase "go-schooling/business/articles"
 	_articleController "go-schooling/controllers/articles"
 	_articleRepo "go-schooling/drivers/databases/articles"
+
+	_categoryarticlesRepo "go-schooling/drivers/databases/categoryarticles"
 
 	_categoryUsecase "go-schooling/business/category"
 	_categoryController "go-schooling/controllers/category"
@@ -89,33 +92,37 @@ func main() {
 
 	e := echo.New()
 
+	logger := logging.NewLogger()
+
 	userRepo := _userRepo.NewMySQLUserRepository(mysql_db)
-	userUsecase := _userUsecase.NewUserUsecase(userRepo, &configJWT, timeoutContext)
+	userUsecase := _userUsecase.NewUserUsecase(userRepo, &configJWT, timeoutContext, logger)
 	userCtrl := _userController.NewUserController(userUsecase)
 
-	teacherRepo := _teacherRepo.NewMySQLTeachersRepository(mysql_db)
-	teacherUsecase := _teacherUsecase.NewTeacherUsecase(teacherRepo, userRepo, &configJWT, timeoutContext)
-	teacherCtrl := _teacherController.NewTeacherController(teacherUsecase)
-
 	classRepo := _classRepo.NewMySQLClassesRepository(mysql_db)
-	classUsecase := _classUsecase.NewClassUsecase(classRepo, &configJWT, timeoutContext)
+	classUsecase := _classUsecase.NewClassUsecase(classRepo, &configJWT, timeoutContext, logger)
 	classCtrl := _classController.NewClassController(classUsecase)
 
+	teacherRepo := _teacherRepo.NewMySQLTeachersRepository(mysql_db)
+	teacherUsecase := _teacherUsecase.NewTeacherUsecase(teacherRepo, userRepo, &configJWT, timeoutContext, logger)
+	teacherCtrl := _teacherController.NewTeacherController(teacherUsecase)
+
+	categoryarticlesRepo := _categoryarticlesRepo.NewMySQLCategoryArticlesRepository(mysql_db)
+
 	categoryRepo := _categoryRepo.NewMySQLCategoryRepository(mysql_db)
-	categoryUsecase := _categoryUsecase.NewCategoryUsecase(categoryRepo, timeoutContext)
+	categoryUsecase := _categoryUsecase.NewCategoryUsecase(categoryRepo, timeoutContext, logger)
 	categoryCtrl := _categoryController.NewCategoryController(categoryUsecase)
 
 	imageRepo := _imageRepo.NewMySQLImagesRepository(mysql_db)
-	imageUsecase := _imageUsecase.NewImageUsecase(imageRepo, configGoogleStorage, timeoutContext)
+	imageUsecase := _imageUsecase.NewImageUsecase(imageRepo, configGoogleStorage, timeoutContext, logger)
 	imagesCtrl := _imageController.NewImageController(imageUsecase)
 
 	articleRepo := _articleRepo.NewMySQLArticlesRepository(mysql_db)
-	articleUsecase := _articleUsecase.NewArticleUsecase(articleRepo, categoryUsecase, imageUsecase, &configJWT, timeoutContext)
+	articleUsecase := _articleUsecase.NewArticleUsecase(articleRepo, categoryarticlesRepo, categoryRepo, imageUsecase, &configJWT, timeoutContext, logger)
 	articleCtrl := _articleController.NewArticleController(articleUsecase)
 
 	MidtransRepo := _midtrans.NewTransactionMidtrans()
 	transactionRepo := _transactionRepo.NewMySQLTransactionRepository(mysql_db)
-	transactionUsecase := _transactionUsecase.NewTransactionUsecase(transactionRepo, timeoutContext, userRepo, MidtransRepo)
+	transactionUsecase := _transactionUsecase.NewTransactionUsecase(transactionRepo, timeoutContext, userRepo, MidtransRepo, logger)
 	transactionCtrl := _transactionController.NewTransactionsController(transactionUsecase)
 
 	routesInit := _routes.ControllerList{

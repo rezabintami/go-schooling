@@ -10,21 +10,22 @@ type Category struct {
 	Title       string
 	Description string
 	Active      bool
-	Archive     bool
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }
 
-func (rec *Category) ToDomain() category.Domain {
-	return category.Domain{
-		ID:        rec.ID,
-		Title:     rec.Title,
-		Active:    rec.Active,
-		CreatedAt: rec.CreatedAt,
-		UpdatedAt: rec.UpdatedAt,
+func (rec *Category) ToDomain() (res *category.Domain) {
+	if rec != nil {
+		res = &category.Domain{
+			ID:        rec.ID,
+			Title:     rec.Title,
+			Active:    rec.Active,
+			CreatedAt: rec.CreatedAt,
+			UpdatedAt: rec.UpdatedAt,
+		}
 	}
+	return res
 }
-
 
 func fromDomain(classDomain category.Domain) *Category {
 	return &Category{

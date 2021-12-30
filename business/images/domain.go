@@ -2,12 +2,16 @@ package images
 
 import (
 	"context"
+	"database/sql"
+	"go-schooling/business/users"
 	"mime/multipart"
 	"time"
 )
 
 type Domain struct {
 	ID        int
+	UserID    sql.NullInt64
+	Users     *users.Domain
 	Name      string
 	Path      string
 	CreatedAt time.Time

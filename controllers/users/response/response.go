@@ -3,14 +3,12 @@ package response
 import (
 	"go-schooling/business/users"
 	classResp "go-schooling/controllers/classes/response"
-	imageResp "go-schooling/controllers/images/response"
 )
 
 type Users struct {
 	ID               int                `gorm:"primary_key" json:"id"`
 	Name             string             `json:"name"`
 	Classes          *classResp.Classes `json:"class"`
-	Images           *imageResp.Images  `json:"images"`
 	Email            string             `json:"email"`
 	NISN             *string            `json:"nisn"`
 	BirthCertificate *string            `json:"birth_certificate"`
@@ -29,7 +27,6 @@ func FromDomain(userDomain users.Domain) Users {
 		ID:               userDomain.ID,
 		Name:             userDomain.Name,
 		Classes:          classResp.FromDomain(userDomain.Classes),
-		Images:           imageResp.FromDomain(userDomain.Images),
 		Email:            userDomain.Email,
 		NISN:             userDomain.NISN,
 		BirthCertificate: userDomain.BirthCertificate,
@@ -46,7 +43,6 @@ func FromListDomain(userDomain []users.Domain) *[]Users {
 			ID:               value.ID,
 			Name:             value.Name,
 			Classes:          classResp.FromDomain(value.Classes),
-			Images:           imageResp.FromDomain(value.Images),
 			Email:            value.Email,
 			NISN:             value.NISN,
 			BirthCertificate: value.BirthCertificate,
@@ -66,7 +62,6 @@ func FromListPageDomain(userDomain []users.Domain, Count int) *UsersPageResponse
 			ID:               value.ID,
 			Name:             value.Name,
 			Classes:          classResp.FromDomain(value.Classes),
-			Images:           imageResp.FromDomain(value.Images),
 			Email:            value.Email,
 			NISN:             value.NISN,
 			BirthCertificate: value.BirthCertificate,

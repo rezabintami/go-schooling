@@ -26,7 +26,7 @@ type ControllerList struct {
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
-	e.Use(_middleware.MiddlewareLogging)
+	// e.Use(_middleware.MiddlewareLogging)
 
 	apiV1 := e.Group("/api/v1")
 
@@ -45,8 +45,10 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	category.GET("/all", cl.CategoriesController.GetAll, middleware.JWTWithConfig(cl.JWTMiddleware))
 
 	//! ARTICLES USER
-	article := apiV1.Group("/article")
-	article.GET("/", cl.ArticleController.Fetch)
+	article := apiV1.Group("/articles")
+	article.GET("", cl.ArticleController.Fetch)
+	article.GET("/:title", cl.ArticleController.GetByTitle)
+	article.GET("/category", cl.ArticleController.GetByCategory)
 
 	//! AUTH
 	auth := apiV1.Group("/auth")
@@ -87,7 +89,6 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	adminArticles.POST("", cl.ArticleController.Store)
 	adminArticles.GET("", cl.ArticleController.Fetch)
 	adminArticles.GET("/:id", cl.ArticleController.GetByID)
-	adminArticles.GET("/:title", cl.ArticleController.GetByTitle)
 	adminArticles.PUT("/:id", cl.ArticleController.Update)
 
 	//! ADMIN CATEGORY
@@ -96,6 +97,6 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	adminCategory.GET("/", cl.CategoriesController.GetByActive, middleware.JWTWithConfig(cl.JWTMiddleware))
 	adminCategory.GET("/:id", cl.CategoriesController.GetByID, middleware.JWTWithConfig(cl.JWTMiddleware))
 	adminCategory.POST("", cl.CategoriesController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))
-	adminCategory.DELETE("/:id", cl.CategoriesController.Delete, middleware.JWTWithConfig(cl.JWTMiddleware)) 
+	adminCategory.DELETE("/:id", cl.CategoriesController.Delete, middleware.JWTWithConfig(cl.JWTMiddleware))
 
 }
