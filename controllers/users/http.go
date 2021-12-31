@@ -60,30 +60,13 @@ func (controller *UserController) Register(c echo.Context) error {
 
 	req := request.Users{}
 	if err := c.Bind(&req); err != nil {
-		res := map[string]interface{}{
-			"success": "false",
-			"error":   err.Error(),
-		}
-		middleware.MiddlewareLoggingEntry(c, "can't get binding data users on Register", res)
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	request := map[string]interface{}{
-		"email": req.Email,
-	}
 	err := controller.userUsecase.Register(ctx, req.ToDomain(), false)
 	if err != nil {
-		res := map[string]interface{}{
-			"success": "false",
-			"error":   err.Error(),
-		}
-		middleware.MiddlewareLoggingEntry(c, request, res)
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
-	res := map[string]interface{}{
-		"success": "true",
-	}
-	middleware.MiddlewareLoggingEntry(c, request, res)
 	return base_response.NewSuccessInsertResponse(c, "Successfully inserted")
 }
 
@@ -92,35 +75,18 @@ func (controller *UserController) Login(c echo.Context) error {
 
 	var userLogin request.Users
 	if err := c.Bind(&userLogin); err != nil {
-		res := map[string]interface{}{
-			"error": err.Error(),
-		}
-		middleware.MiddlewareLoggingEntry(c, "can't get binding data users on Login", res)
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
-	}
-
-	request := map[string]interface{}{
-		"email": userLogin.Email,
 	}
 
 	token, err := controller.userUsecase.Login(ctx, userLogin.Email, userLogin.Password, false)
 
 	if err != nil {
-		res := map[string]interface{}{
-			"error": err.Error(),
-		}
-		middleware.MiddlewareLoggingEntry(c, request, res)
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 	result := struct {
 		Token string `json:"token"`
 	}{Token: token}
 
-	res := map[string]interface{}{
-		"token": token,
-	}
-
-	middleware.MiddlewareLoggingEntry(c, request, res)
 	return base_response.NewSuccessResponse(c, result)
 }
 
@@ -129,30 +95,10 @@ func (controller *UserController) GetByID(c echo.Context) error {
 
 	id := middleware.GetUser(c).ID
 
-	request := map[string]interface{}{
-		"id": id,
-	}
-
 	user, err := controller.userUsecase.GetByID(ctx, id)
 	if err != nil {
-		res := map[string]interface{}{
-			"error": err.Error(),
-		}
-		middleware.MiddlewareLoggingEntry(c, request, res)
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
-
-	res := map[string]interface{}{
-		"id":        id,
-		"name":      user.Name,
-		"email":     user.Email,
-		"nisn":      user.NISN,
-		"class":     user.Classes.Name,
-		"graduated": user.Graduated,
-		"status":    user.Status,
-	}
-
-	middleware.MiddlewareLoggingEntry(c, request, res)
 
 	return base_response.NewSuccessResponse(c, response.FromDomain(user))
 }
@@ -163,45 +109,16 @@ func (controller *UserController) Update(c echo.Context) error {
 	id := middleware.GetUser(c).ID
 	req := request.UpdateUsers{}
 	if err := c.Bind(&req); err != nil {
-		res := map[string]interface{}{
-			"error": err.Error(),
-		}
-		middleware.MiddlewareLoggingEntry(c, "can't get binding data users on Update", res)
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
-	}
-	request := map[string]interface{}{
-		"id":    id,
-		"email": req.Email,
-		"name":  req.Name,
 	}
 	err := controller.userUsecase.Update(ctx, req.ToUpdateDomain(), id)
 	if err != nil {
-		res := map[string]interface{}{
-			"error": err.Error(),
-		}
-		middleware.MiddlewareLoggingEntry(c, request, res)
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 	user, err := controller.userUsecase.GetByID(ctx, id)
 	if err != nil {
-		res := map[string]interface{}{
-			"error": err.Error(),
-		}
-		middleware.MiddlewareLoggingEntry(c, request, res)
-
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
-
-	res := map[string]interface{}{
-		"id":        user.ID,
-		"name":      user.Name,
-		"email":     user.Email,
-		"nisn":      user.NISN,
-		"class":     user.Classes.Name,
-		"graduated": user.Graduated,
-		"status":    user.Status,
-	}
-	middleware.MiddlewareLoggingEntry(c, request, res)
 
 	return base_response.NewSuccessResponse(c, response.FromDomain(user))
 }
@@ -211,19 +128,8 @@ func (controller *UserController) GetAll(c echo.Context) error {
 
 	result, err := controller.userUsecase.GetAll(ctx)
 	if err != nil {
-		res := map[string]interface{}{
-			"error": err.Error(),
-		}
-		middleware.MiddlewareLoggingEntry(c, "can't get all data users", res)
-
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
-
-	res := map[string]interface{}{
-		"status": "success",
-	}
-
-	middleware.MiddlewareLoggingEntry(c, "get all data users", res)
 	return base_response.NewSuccessResponse(c, response.FromListDomain(result))
 }
 
@@ -232,24 +138,11 @@ func (controller *UserController) Fetch(c echo.Context) error {
 
 	page, _ := strconv.Atoi(c.QueryParam("page"))
 	perpage, _ := strconv.Atoi(c.QueryParam("per_page"))
-	request := map[string]interface{}{
-		"page":     page,
-		"per_page": perpage,
-	}
 	articles, count, err := controller.userUsecase.Fetch(ctx, page, perpage)
 	if err != nil {
-		res := map[string]interface{}{
-			"error": err.Error(),
-		}
-		middleware.MiddlewareLoggingEntry(c, "can't get all data users Fetch", res)
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	res := map[string]interface{}{
-		"status": "success",
-	}
-
-	middleware.MiddlewareLoggingEntry(c, request, res)
 	return base_response.NewSuccessResponse(c, response.FromListPageDomain(articles, count))
 }
 
