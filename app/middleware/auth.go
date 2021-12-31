@@ -53,11 +53,11 @@ func GetUser(c echo.Context) *JwtCustomClaims {
 
 func MiddlewareLogging(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		logging.Logging(c).Info("incoming request")
+		logging.NewLogger().Logging(c).Info("incoming request")
 		return next(c)
 	}
 }
 
-func MiddlewareLoggingEntry(c echo.Context, request, response interface{}) {
-	logging.LogEntry(c, request, response).Info("incoming request")
-}
+// func MiddlewareLoggingEntry(c echo.Context, request, response interface{}) {
+// 	logging.LogEntry(c, request, response).Info("incoming request")
+// }
