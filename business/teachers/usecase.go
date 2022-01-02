@@ -28,42 +28,114 @@ func NewTeacherUsecase(tr Repository, ur interface{}, jwtauth *middleware.Config
 }
 
 func (tu *TeacherUsecase) GetAll(ctx context.Context) ([]Domain, error) {
+	tu.logger.LogEntry("get all data teachers", nil)
+
 	result, err := tu.teacherRepository.GetAll(ctx)
 	if err != nil {
+		result := map[string]interface{}{
+			"error": err.Error(),
+		}
+		tu.logger.LogEntry("can't get all data teachers", result).Error(err.Error())
+
 		return []Domain{}, err
 	}
+
+	tu.logger.LogEntry("success to get all data teachers", nil)
+
 	return result, nil
 
 }
 
 func (tu *TeacherUsecase) GetByID(ctx context.Context, id int) (Domain, error) {
-	result, err := tu.teacherRepository.GetByID(ctx, id)
+	request := map[string]interface{}{
+		"id": id,
+	}
+
+	teachers, err := tu.teacherRepository.GetByID(ctx, id)
 	if err != nil {
+		result := map[string]interface{}{
+			"error": err.Error(),
+		}
+		tu.logger.LogEntry(request, result).Error(err.Error())
+
 		return Domain{}, err
 	}
-	return result, nil
+
+	result := map[string]interface{}{
+		"id":    teachers.ID,
+		"name":  teachers.Name,
+		"email": teachers.Email,
+		"nip":   teachers.NIP,
+		"photo": teachers.Photo,
+	}
+	tu.logger.LogEntry(request, result)
+
+	return teachers, nil
 }
 
 func (tu *TeacherUsecase) Update(ctx context.Context, teacherDomain *Domain, id int) error {
+	request := map[string]interface{}{
+		"id":    id,
+		"name":  teacherDomain.Name,
+		"email": teacherDomain.Email,
+		"nip":   teacherDomain.NIP,
+		"photo": teacherDomain.Photo,
+	}
+
 	err := tu.teacherRepository.Update(ctx, teacherDomain, id)
 	if err != nil {
+		result := map[string]interface{}{
+			"error": err.Error(),
+		}
+		tu.logger.LogEntry(request, result).Error(err.Error())
 		return err
 	}
+
+	result := map[string]interface{}{
+		"success": "true",
+	}
+	tu.logger.LogEntry(request, result)
+
 	return nil
 }
 
 func (tu *TeacherUsecase) Store(ctx context.Context, teacherDomain *Domain) error {
+	request := map[string]interface{}{
+		"name":  teacherDomain.Name,
+		"email": teacherDomain.Email,
+		"nip":   teacherDomain.NIP,
+		"photo": teacherDomain.Photo,
+	}
+
 	err := tu.teacherRepository.Store(ctx, teacherDomain)
 	if err != nil {
+		result := map[string]interface{}{
+			"success": "false",
+			"error":   err.Error(),
+		}
+		tu.logger.LogEntry(request, result).Error(err.Error())
 		return err
 	}
+
+	result := map[string]interface{}{
+		"success": "true",
+	}
+	tu.logger.LogEntry(request, result).Info("incoming request")
 
 	return nil
 }
 
 func (tu *TeacherUsecase) Login(ctx context.Context, email, password string) (string, error) {
+	request := map[string]interface{}{
+		"email": email,
+	}
 	existedUser, err := tu.teacherRepository.GetByEmail(ctx, email)
 	if err != nil {
+		result := map[string]interface{}{
+			"success": "false",
+			"error":   err.Error(),
+		}
+		tu.logger.LogEntry(request, result).Error(err.Error())
 		return "", err
 	}
 
@@ -72,5 +144,11 @@ func (tu *TeacherUsecase) Login(ctx context.Context, email, password string) (st
 	}
 
 	token := tu.jwtAuth.GenerateToken(existedUser.ID, existedUser.Roles)
+
+	result := map[string]interface{}{
+		"success": "true",
+	}
+	tu.logger.LogEntry(request, result)
+
 	return token, nil
 }
