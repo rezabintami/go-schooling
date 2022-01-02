@@ -38,7 +38,7 @@ func (uc *UserUsecase) Login(ctx context.Context, email, password string, sso bo
 			"success": "false",
 			"error":   err.Error(),
 		}
-		uc.logger.LogEntry(request, result)
+		uc.logger.LogEntry(request, result).Error(err.Error())
 		return "", err
 	}
 
@@ -64,7 +64,7 @@ func (uc *UserUsecase) GetByID(ctx context.Context, id int) (Domain, error) {
 		result := map[string]interface{}{
 			"error": err.Error(),
 		}
-		uc.logger.LogEntry(request, result)
+		uc.logger.LogEntry(request, result).Error(err.Error())
 		return Domain{}, err
 	}
 
@@ -98,7 +98,7 @@ func (uc *UserUsecase) Update(ctx context.Context, userDomain *Domain, id int) e
 		result := map[string]interface{}{
 			"error": err.Error(),
 		}
-		uc.logger.LogEntry(request, result)
+		uc.logger.LogEntry(request, result).Error(err.Error())
 		return err
 	}
 
@@ -167,7 +167,7 @@ func (uc *UserUsecase) GetAll(ctx context.Context) ([]Domain, error) {
 		result := map[string]interface{}{
 			"error": err.Error(),
 		}
-		uc.logger.LogEntry("can't get all data users", result)
+		uc.logger.LogEntry("can't get all data users", result).Error(err.Error())
 		return []Domain{}, err
 	}
 
@@ -195,7 +195,7 @@ func (uc *UserUsecase) Fetch(ctx context.Context, page, perpage int) ([]Domain, 
 		result := map[string]interface{}{
 			"error": err.Error(),
 		}
-		uc.logger.LogEntry("can't get all data users Fetch", result)
+		uc.logger.LogEntry("can't get all data users Fetch", result).Error(err.Error())
 		return []Domain{}, 0, err
 	}
 	result := map[string]interface{}{
