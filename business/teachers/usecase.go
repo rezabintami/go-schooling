@@ -28,7 +28,7 @@ func NewTeacherUsecase(tr Repository, ur interface{}, jwtauth *middleware.Config
 }
 
 func (tu *TeacherUsecase) GetAll(ctx context.Context) ([]Domain, error) {
-	tu.logger.LogEntry("get all data teachers", nil)
+	tu.logger.LogEntry("get all data teachers", nil).Info("incoming request")
 
 	result, err := tu.teacherRepository.GetAll(ctx)
 	if err != nil {
@@ -40,7 +40,7 @@ func (tu *TeacherUsecase) GetAll(ctx context.Context) ([]Domain, error) {
 		return []Domain{}, err
 	}
 
-	tu.logger.LogEntry("success to get all data teachers", nil)
+	tu.logger.LogEntry("success to get all data teachers", nil).Info("incoming request")
 
 	return result, nil
 
@@ -68,7 +68,7 @@ func (tu *TeacherUsecase) GetByID(ctx context.Context, id int) (Domain, error) {
 		"nip":   teachers.NIP,
 		"photo": teachers.Photo,
 	}
-	tu.logger.LogEntry(request, result)
+	tu.logger.LogEntry(request, result).Info("incoming request")
 
 	return teachers, nil
 }
@@ -94,7 +94,7 @@ func (tu *TeacherUsecase) Update(ctx context.Context, teacherDomain *Domain, id 
 	result := map[string]interface{}{
 		"success": "true",
 	}
-	tu.logger.LogEntry(request, result)
+	tu.logger.LogEntry(request, result).Info("incoming request")
 
 	return nil
 }
@@ -148,7 +148,7 @@ func (tu *TeacherUsecase) Login(ctx context.Context, email, password string) (st
 	result := map[string]interface{}{
 		"success": "true",
 	}
-	tu.logger.LogEntry(request, result)
+	tu.logger.LogEntry(request, result).Info("incoming request")
 
 	return token, nil
 }

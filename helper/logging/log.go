@@ -29,13 +29,15 @@ func NewLogger() Logger {
 }
 
 func (l Logger) Logging(c echo.Context) *log.Entry {
+	logs := l.Log
+
 	if c == nil {
-		return log.WithFields(log.Fields{
+		return logs.WithFields(log.Fields{
 			"at": time.Now().Format("2006-01-02 15:04:05"),
 		})
 	}
 
-	return log.WithFields(log.Fields{
+	return logs.WithFields(log.Fields{
 		"at":     time.Now().Format("2006-01-02 15:04:05"),
 		"method": c.Request().Method,
 		"uri":    c.Request().URL.String(),

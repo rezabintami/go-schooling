@@ -94,6 +94,8 @@ func main() {
 
 	logger := logging.NewLogger()
 
+	middlewareLog := _middleware.NewMiddleware(logger)
+
 	userRepo := _userRepo.NewMySQLUserRepository(mysql_db)
 	userUsecase := _userUsecase.NewUserUsecase(userRepo, &configJWT, timeoutContext, logger)
 	userCtrl := _userController.NewUserController(userUsecase)
@@ -126,6 +128,7 @@ func main() {
 	transactionCtrl := _transactionController.NewTransactionsController(transactionUsecase)
 
 	routesInit := _routes.ControllerList{
+		MiddlewareLog:         middlewareLog,
 		JWTMiddleware:         configJWT.Init(),
 		UserController:        *userCtrl,
 		TeacherController:     *teacherCtrl,

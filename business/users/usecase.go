@@ -50,7 +50,7 @@ func (uc *UserUsecase) Login(ctx context.Context, email, password string, sso bo
 	result := map[string]interface{}{
 		"success": "true",
 	}
-	uc.logger.LogEntry(request, result)
+	uc.logger.LogEntry(request, result).Info("incoming request")
 	return token, nil
 }
 
@@ -60,6 +60,7 @@ func (uc *UserUsecase) GetByID(ctx context.Context, id int) (Domain, error) {
 	}
 
 	users, err := uc.userRepository.GetByID(ctx, id)
+
 	if err != nil {
 		result := map[string]interface{}{
 			"error": err.Error(),
@@ -73,11 +74,12 @@ func (uc *UserUsecase) GetByID(ctx context.Context, id int) (Domain, error) {
 		"name":      users.Name,
 		"email":     users.Email,
 		"nisn":      users.NISN,
-		"class":     users.Classes.Name,
+		"class":     users.Classes,
 		"graduated": users.Graduated,
 		"status":    users.Status,
 	}
-	uc.logger.LogEntry(request, result)
+
+	uc.logger.LogEntry(request, result).Info("incoming request")
 
 	return users, nil
 }
@@ -105,7 +107,7 @@ func (uc *UserUsecase) Update(ctx context.Context, userDomain *Domain, id int) e
 	result := map[string]interface{}{
 		"success": "true",
 	}
-	uc.logger.LogEntry(request, result)
+	uc.logger.LogEntry(request, result).Info("incoming request")
 
 	return nil
 }
@@ -160,7 +162,7 @@ func (uc *UserUsecase) Register(ctx context.Context, userDomain *Domain, sso boo
 }
 
 func (uc *UserUsecase) GetAll(ctx context.Context) ([]Domain, error) {
-	uc.logger.LogEntry("get all data users", nil)
+	uc.logger.LogEntry("get all data users", nil).Info("incoming request")
 
 	result, err := uc.userRepository.GetAll(ctx)
 	if err != nil {
@@ -171,7 +173,7 @@ func (uc *UserUsecase) GetAll(ctx context.Context) ([]Domain, error) {
 		return []Domain{}, err
 	}
 
-	uc.logger.LogEntry("success to get all data users", nil)
+	uc.logger.LogEntry("success to get all data users", nil).Info("incoming request")
 
 	return result, nil
 }
@@ -181,7 +183,7 @@ func (uc *UserUsecase) Fetch(ctx context.Context, page, perpage int) ([]Domain, 
 		"page":     page,
 		"per_page": perpage,
 	}
-	uc.logger.LogEntry(request, nil)
+	uc.logger.LogEntry(request, nil).Info("incoming request")
 
 	if page <= 0 {
 		page = 1
@@ -201,7 +203,7 @@ func (uc *UserUsecase) Fetch(ctx context.Context, page, perpage int) ([]Domain, 
 	result := map[string]interface{}{
 		"status": "success",
 	}
-	uc.logger.LogEntry(request, result)
+	uc.logger.LogEntry(request, result).Info("incoming request")
 
 	return res, total, nil
 }
