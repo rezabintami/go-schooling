@@ -20,6 +20,16 @@ type ConfigJWT struct {
 	ExpiresDuration int
 }
 
+type ConfigMiddleware struct {
+	logger logging.Logger
+}
+
+func NewMiddleware(logger logging.Logger) ConfigMiddleware {
+	return ConfigMiddleware{
+		logger: logger,
+	}
+}
+
 func (jwtConf *ConfigJWT) Init() middleware.JWTConfig {
 	return middleware.JWTConfig{
 		Claims:     &JwtCustomClaims{},
@@ -51,9 +61,9 @@ func GetUser(c echo.Context) *JwtCustomClaims {
 	return claims
 }
 
-func MiddlewareLogging(next echo.HandlerFunc) echo.HandlerFunc {
+func (logs *ConfigMiddleware) MiddlewareLogging(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		logging.NewLogger().Logging(c).Info("incoming request")
+		logs.logger.Logging(c).Info("incoming request")
 		return next(c)
 	}
 }
