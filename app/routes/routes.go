@@ -15,6 +15,7 @@ import (
 )
 
 type ControllerList struct {
+	MiddlewareLog         _middleware.ConfigMiddleware
 	JWTMiddleware         middleware.JWTConfig
 	UserController        users.UserController
 	TeacherController     teachers.TeacherController
@@ -26,7 +27,7 @@ type ControllerList struct {
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
-	e.Use(_middleware.MiddlewareLogging)
+	e.Use(cl.MiddlewareLog.MiddlewareLogging)
 
 	apiV1 := e.Group("/api/v1")
 

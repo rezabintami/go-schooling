@@ -24,6 +24,6 @@ This project has't deployed
 
 This project don't have `Frontend`
 
-## Lisence
+## License
 
 Open Source
